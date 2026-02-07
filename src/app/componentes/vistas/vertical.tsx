@@ -1,13 +1,20 @@
+import React from "react";
 import EventoCard from "./eventoCard";
-import IconoEvento from "./iconoEvento";
 
-export default function Vertical() {
-  const eventos = [
-    { fecha: "10 ago", hora: "10:00", titulo: "Reunión comunitaria", tipo: "reunion" },
-    { fecha: "10 ago", hora: "11:30", titulo: "Visita a hogar", tipo: "visita" },
-    { fecha: "10 ago", hora: "19:00", titulo: "Reunión de oración", tipo: "oracion" },
-    { fecha: "10 ago", hora: "20:00", titulo: "Salida al encuentro", tipo: "salida" },
-    { fecha: "10 ago", titulo: "Nota sobre comunidad", tipo: "nota" }
+type Evento = {
+  fecha: string;
+  hora?: string;
+  titulo: string;
+  tipo: "nota" | "oracion" | "reunion" | "visita" | "salida"; // 🔑 mismo tipado que EventoCard
+  estado?: "vigente" | "caducado";
+};
+
+export default function VerticalView() {
+  const eventos: Evento[] = [
+    { fecha: "2026-02-07", hora: "14:00", titulo: "Oración comunitaria", tipo: "oracion" },
+    { fecha: "2026-02-08", titulo: "Reunión pastoral", tipo: "reunion", estado: "vigente" },
+    { fecha: "2026-02-09", titulo: "Visita a la comunidad", tipo: "visita", estado: "caducado" },
+    { fecha: "2026-02-10", titulo: "Nota personal", tipo: "nota" },
   ];
 
   return (
