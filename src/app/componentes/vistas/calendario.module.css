@@ -1,0 +1,101 @@
+.calendario {
+  display: grid;
+   width: fit-content;   /* 👈 el grid ocupa solo lo necesario */
+  margin: 0 auto;       /* 👈 centra horizontalmente */
+
+
+  grid-template-columns: repeat(7, minmax(40px, 1fr));
+  gap: 6px;
+ 
+  max-width: 95%;
+
+}
+
+.celda {
+  border: 1px solid #ddd;
+  min-height: 70px;
+  padding: 4px;
+  position: relative;
+  background-color: #fff;
+}
+
+.numeroDia {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  font-size: 0.7rem;
+  color: #555;
+}
+
+.tarjetitas {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 18px;
+}
+
+.tarjetita {
+  margin: 2px 0;
+  padding: 4px 6px;
+  border-radius: 6px;
+  font-size: 0.65rem;
+  text-align: center;
+  cursor: pointer;
+  min-height: 44px; /* accesible al tacto */
+}
+
+/* Colores pastel según tipo */
+.evento { background-color: #a7d8ff; }
+.nota { background-color: #fff3a7; }
+.oracion { background-color: #b7f7b7; }
+
+/* Responsive */
+@media (max-width: 768px) {
+  .calendario {
+    grid-template-columns: repeat(7, minmax(40px, 1fr));
+    margin-left: 0; 
+    padding-left: 0;  /* 👈 elimina espacio interno a la izquierda */
+    max-width: 98%; 
+  }
+  .tarjetita {
+    font-size: 0.6rem;
+    padding: 3px;
+  }
+}
+
+/* Responsive especial para pantallas muy chicas */
+@media (max-width: 330px) {
+  .calendario {
+    grid-template-columns: repeat(7, minmax(36px, 1fr)); /* ajusta ancho mínimo */
+    gap: 2px;
+    /* 👇 nuevo ajuste */
+     margin-left: 0; 
+     
+     padding-left: 0;  /* 👈 elimina espacio interno a la izquierda */
+      
+     max-width: 98%;      /* evita que se desborde */
+
+  }
+
+  .celda {
+    min-height: 50px;   /* más compacta */
+    padding: 2px;       /* menos espacio interno */
+  }
+
+  .numeroDia {
+    font-size: 0.6rem;  /* número más chico */
+  }
+
+  .tarjetita {
+    font-size: 0.55rem;
+    padding: 2px 4px;
+    min-height: 36px;   /* accesible pero compacto */
+  }
+
+  .evento,
+  .nota,
+  .oracion {
+    font-size: 0.55rem;
+    padding: 1px 3px;
+  }
+}
