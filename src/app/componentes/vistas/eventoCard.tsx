@@ -4,7 +4,7 @@ type Props = {
   fecha: string;
   hora?: string;
   titulo: string;
-  tipo: "reunion" | "visita" | "oracion" | "salida" | "nota";
+  tipo: "reunion" | "visita" | "oracion" | "salida" | "nota"; // 🔑 tipado seguro
   estado?: "vigente" | "caducado"; // opcional, solo para eventos
 };
 
