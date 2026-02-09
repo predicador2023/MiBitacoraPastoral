@@ -54,6 +54,32 @@
   color: gray;
 }
 
+/* Texto dentro de las celdas */
+.textoOracion {
+  font-size: 0.75rem;   /* más pequeño, armoniza con el grid */
+  color: #43A047;       /* verde esperanza */
+  font-weight: 500;
+}
+
+/* Ícono dentro de las celdas */
+.iconoOracion {
+  font-size: 1rem;      /* no tan grande, pero visible */
+  color: #43A047;       /* verde esperanza */
+  margin-right: 0.25rem;
+}
+
+/* Tarjeta inferior (detalle al hacer click) */
+.tarjeta h3 {
+  font-size: 1rem;      /* título más pequeño */
+  color: #43A047;       /* verde esperanza */
+}
+
+.tarjeta p {
+  font-size: 0.85rem;   /* texto más pequeño y armonioso */
+  line-height: 1.3;
+  color: #43A047;       /* verde esperanza */
+}
+
 /* 📱 Mobile first */
 @media (min-width: 330px) {
   .titulo { font-size: 15px; }
