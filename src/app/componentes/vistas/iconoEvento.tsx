@@ -1,24 +1,20 @@
-import { FaUsers, FaHome, FaPrayingHands, FaArrowRight, FaStickyNote } from "react-icons/fa";
+import { FaUsers, FaPrayingHands, FaStickyNote } from "react-icons/fa";
 
 type Props = {
-  tipo: "reunion" | "visita" | "oracion" | "salida" | "nota";
+  tipo: "oraciones" | "eventos" | "notas"; // 🔹 solo tres tipos
   estado?: "vigente" | "caducado"; // opcional, solo para eventos
 };
 
 export default function IconoEvento({ tipo, estado }: Props) {
-  const esEvento = tipo !== "nota" && tipo !== "oracion";
+  const esEvento = tipo === "eventos"; // 🔹 ahora solo eventos se consideran "evento"
   const color = esEvento && estado === "caducado" ? "#9E9E9E" : getColor(tipo);
 
   switch (tipo) {
-    case "reunion":
-      return <FaUsers color={color} />;
-    case "visita":
-      return <FaHome color={color} />;
-    case "oracion":
+    case "oraciones":
       return <FaPrayingHands color={color} />;
-    case "salida":
-      return <FaArrowRight color={color} />;
-    case "nota":
+    case "eventos":
+      return <FaUsers color={color} />;
+    case "notas":
       return <FaStickyNote color={color} />;
     default:
       return null;
@@ -27,11 +23,9 @@ export default function IconoEvento({ tipo, estado }: Props) {
 
 function getColor(tipo: Props["tipo"]) {
   switch (tipo) {
-    case "reunion": return "#1E88E5"; // azul
-    case "visita": return "#E53935"; // rojo
-    case "oracion": return "#43A047"; // verde
-    case "salida": return "#FB8C00"; // naranja
-    case "nota": return "#9E9E9E"; // gris
+    case "oraciones": return "#43A047"; // verde esperanza
+    case "eventos": return "#1E88E5";   // azul para eventos
+    case "notas": return "#9E9E9E";     // gris para notas
     default: return "#fff";
   }
 }
