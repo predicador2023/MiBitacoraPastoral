@@ -4,14 +4,22 @@ import styles from "./calendario.module.css";
 
 const diasSemana = ["DOM","LUN","MAR","MIÉ","JUE","VIE","SÁ"];
 
+// 🔹 Definimos la estructura que devuelve la API
+interface Registro {
+  fecha: string;
+  titulo: string;
+  texto: string;
+  tipo: "oraciones" | "eventos" | "notas";
+}
+
 export default function Calendario() {
-  const [registros, setRegistros] = useState([]);
-  const [seleccionado, setSeleccionado] = useState(null);
+  const [registros, setRegistros] = useState<Registro[]>([]); // tipado correcto
+  const [seleccionado, setSeleccionado] = useState<Registro | null>(null);
 
   useEffect(() => {
     fetch("/api/oraciones")
       .then((res) => res.json())
-      .then((data) => setRegistros(data));
+      .then((data: Registro[]) => setRegistros(data)); // tipamos la respuesta
   }, []);
 
   const diasDelMes = Array.from({ length: 29 }, (_, i) => i + 1);
@@ -48,13 +56,13 @@ export default function Calendario() {
         })}
       </div>
 
-    {seleccionado && (
-  <div className={styles.tarjeta}>
-    <h3>{seleccionado.titulo}</h3>
-    <p>{seleccionado.texto}</p> {/* 🔹 ahora se muestra el texto completo */}
-    <button onClick={() => setSeleccionado(null)}>Cerrar</button>
-  </div>
-)}
+      {seleccionado && (
+        <div className={styles.tarjeta}>
+          <h3>{seleccionado.titulo}</h3>
+          <p>{seleccionado.texto}</p>
+          <button onClick={() => setSeleccionado(null)}>Cerrar</button>
+        </div>
+      )}
     </div>
   );
 }
