@@ -1,101 +1,79 @@
-.calendario {
+/* Contenedor general del calendario */
+.container {
+  width: 100%;
+  margin: 0 auto;
+  font-family: sans-serif;
+  background-color: transparent;
+  padding: 4px !important; /* tu ajuste permanente */
+}
+
+/* Título del mes */
+.titulo {
+  text-align: center;
+  font-size: 14px;
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+/* Grilla principal */
+.grid {
   display: grid;
-   width: fit-content;   /* 👈 el grid ocupa solo lo necesario */
-  margin: 0 auto;       /* 👈 centra horizontalmente */
-
-
-  grid-template-columns: repeat(7, minmax(40px, 1fr));
-  gap: 6px;
- 
-  max-width: 95%;
-
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  width: 100%;
+  border-collapse: collapse;
 }
 
-.celda {
-  border: 1px solid #ddd;
-  min-height: 70px;
-  padding: 4px;
+/* Cabecera de días de la semana */
+.diaSemana {
+  border: 1px solid #ccc;
+  background-color: #f0f0f0;
+  font-size: 11px;
+  font-weight: bold;
+  text-align: center;
+  padding: 4px 0;       /* altura justa para texto */
+  min-height: 28px;     /* más bajo que las celdas de días */
+  line-height: 1.2;
+}
+
+/* Celdas de días */
+.celdaDia {
+  border: 1px solid #ccc;
+  background: #fff;
+  min-height: 70px;     /* espacio para números y contenido */
   position: relative;
-  background-color: #fff;
+  text-align: center;
+  box-sizing: border-box;
 }
 
+/* Número del día */
 .numeroDia {
   position: absolute;
-  top: 4px;
-  left: 4px;
-  font-size: 0.7rem;
-  color: #555;
+  top: 2px;
+  left: 2px;
+  font-size: 9px;
+  color: gray;
 }
 
-.tarjetitas {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-top: 18px;
+/* 📱 Mobile first */
+@media (min-width: 330px) {
+  .titulo { font-size: 15px; }
+  .diaSemana { font-size: 12px; min-height: 30px; }
+  .celdaDia { min-height: 55px; }
+  .numeroDia { font-size: 10px; }
 }
 
-.tarjetita {
-  margin: 2px 0;
-  padding: 4px 6px;
-  border-radius: 6px;
-  font-size: 0.65rem;
-  text-align: center;
-  cursor: pointer;
-  min-height: 44px; /* accesible al tacto */
+/* 💻 Pantallas medianas */
+@media (min-width: 768px) {
+  .titulo { font-size: 18px; }
+  .diaSemana { font-size: 13px; min-height: 32px; }
+  .celdaDia { min-height: 70px; }
+  .numeroDia { font-size: 11px; }
 }
 
-/* Colores pastel según tipo */
-.evento { background-color: #a7d8ff; }
-.nota { background-color: #fff3a7; }
-.oracion { background-color: #b7f7b7; }
-
-/* Responsive */
-@media (max-width: 768px) {
-  .calendario {
-    grid-template-columns: repeat(7, minmax(40px, 1fr));
-    margin-left: 0; 
-    padding-left: 0;  /* 👈 elimina espacio interno a la izquierda */
-    max-width: 98%; 
-  }
-  .tarjetita {
-    font-size: 0.6rem;
-    padding: 3px;
-  }
-}
-
-/* Responsive especial para pantallas muy chicas */
-@media (max-width: 330px) {
-  .calendario {
-    grid-template-columns: repeat(7, minmax(36px, 1fr)); /* ajusta ancho mínimo */
-    gap: 2px;
-    /* 👇 nuevo ajuste */
-     margin-left: 0; 
-     
-     padding-left: 0;  /* 👈 elimina espacio interno a la izquierda */
-      
-     max-width: 98%;      /* evita que se desborde */
-
-  }
-
-  .celda {
-    min-height: 50px;   /* más compacta */
-    padding: 2px;       /* menos espacio interno */
-  }
-
-  .numeroDia {
-    font-size: 0.6rem;  /* número más chico */
-  }
-
-  .tarjetita {
-    font-size: 0.55rem;
-    padding: 2px 4px;
-    min-height: 36px;   /* accesible pero compacto */
-  }
-
-  .evento,
-  .nota,
-  .oracion {
-    font-size: 0.55rem;
-    padding: 1px 3px;
-  }
+/* 🖥️ Pantallas grandes */
+@media (min-width: 1200px) {
+  .titulo { font-size: 20px; }
+  .diaSemana { font-size: 14px; min-height: 34px; }
+  .celdaDia { min-height: 90px; }
+  .numeroDia { font-size: 12px; }
 }

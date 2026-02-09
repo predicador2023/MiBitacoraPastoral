@@ -11,10 +11,10 @@ export default function Page() {
 
   return (
     <>
-      {/* 🔹 Header recibe setVista y muestra el selector arriba */}
+      {/* Header recibe setVista y muestra el selector arriba */}
       <Header setVista={setVista} />
 
-      <div style={{ padding: "20px" }}>
+      <div style={{ padding: "4px" }}>
         {vista === "calendario" && <Calendario />}
         {vista === "vertical" && <Vertical />}
         {vista === "horizontal" && <Horizontal />}
