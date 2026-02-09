@@ -4,12 +4,12 @@ type Props = {
   fecha: string;
   hora?: string;
   titulo: string;
-  tipo: "reunion" | "visita" | "oracion" | "salida" | "nota";
+  tipo: "oraciones" | "eventos" | "notas"; // 🔹 solo tres tipos
   estado?: "vigente" | "caducado";
 };
 
 export default function EventoCard({ fecha, hora, titulo, tipo, estado }: Props) {
-  const esEvento = tipo !== "nota" && tipo !== "oracion";
+  const esEvento = tipo === "eventos"; // 🔹 ahora solo eventos se consideran "evento"
 
   const estiloEstado =
     esEvento && estado === "caducado"
@@ -32,11 +32,9 @@ export default function EventoCard({ fecha, hora, titulo, tipo, estado }: Props)
 
 function getColor(tipo: Props["tipo"]) {
   switch (tipo) {
-    case "reunion": return "#1E88E5";
-    case "visita": return "#E53935";
-    case "oracion": return "#43A047";
-    case "salida": return "#FB8C00";
-    case "nota": return "#9E9E9E";
+    case "oraciones": return "#43A047"; // verde esperanza
+    case "eventos": return "#1E88E5";   // azul para eventos
+    case "notas": return "#9E9E9E";     // gris para notas
     default: return "#fff";
   }
 }
