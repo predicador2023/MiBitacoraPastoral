@@ -1,27 +1,47 @@
+"use client";
 import React from "react";
-import EventoCard from "./eventoCard";
 
-type Evento = {
+interface Registro {
   fecha: string;
-  hora?: string;
+  hora: string;
   titulo: string;
-  tipo: "nota" | "oracion" | "reunion" | "visita" | "salida"; // 🔑 mismo tipado que EventoCard
-  estado?: "vigente" | "caducado";
-};
+  tipo: "oraciones" | "eventos" | "notas"; // 🔹 solo tres tipos permitidos
+}
 
-export default function VerticalView() {
-  const eventos: Evento[] = [
-    { fecha: "2026-02-07", hora: "14:00", titulo: "Oración comunitaria", tipo: "oracion" },
-    { fecha: "2026-02-08", titulo: "Reunión pastoral", tipo: "reunion", estado: "vigente" },
-    { fecha: "2026-02-09", titulo: "Visita a la comunidad", tipo: "visita", estado: "caducado" },
-    { fecha: "2026-02-10", titulo: "Nota personal", tipo: "nota" },
-  ];
+const registros: Registro[] = [
+  {
+    fecha: "2026-02-01",
+    hora: "10:00",
+    titulo: "Oración por la Iglesia",
+    tipo: "oraciones",
+  },
+  {
+    fecha: "2026-02-05",
+    hora: "19:00",
+    titulo: "Reunión de líderes",
+    tipo: "eventos",
+  },
+  {
+    fecha: "2026-02-07",
+    hora: "09:00",
+    titulo: "Nota pastoral",
+    tipo: "notas",
+  },
+];
 
+export default function Vertical() {
   return (
-    <div style={{ backgroundColor: "#000", padding: "1rem" }}>
-      {eventos.map((evento, index) => (
-        <EventoCard key={index} {...evento} />
-      ))}
+    <div style={{ padding: "16px" }}>
+      <h2>Vista Vertical</h2>
+      <ul>
+        {registros.map((registro, index) => (
+          <li key={index}>
+            <strong>{registro.titulo}</strong> <br />
+            {registro.fecha} – {registro.hora} <br />
+            <em>{registro.tipo}</em>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }
