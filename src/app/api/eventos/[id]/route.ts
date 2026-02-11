@@ -3,9 +3,12 @@ import dbConnect from "@/lib/dbConnect";     // tu conexión a MongoDB
 import Evento from "@/models/evento";        // tu modelo de eventos
 
 // 🔹 GET: obtener un evento por ID
-export async function GET(req: Request, context: { params: Promise<{ id: string }> }) {
+export async function GET(
+  req: Request,
+  { params }: { params: { id: string } }
+) {
   await dbConnect();
-  const { id } = await context.params;   // ✅ unwrap con await
+  const { id } = params;   // ✅ ya no usamos await
   try {
     const evento = await Evento.findById(id);
     if (!evento) {
@@ -18,9 +21,12 @@ export async function GET(req: Request, context: { params: Promise<{ id: string 
 }
 
 // 🔹 PUT: actualizar un evento por ID
-export async function PUT(req: Request, context: { params: Promise<{ id: string }> }) {
+export async function PUT(
+  req: Request,
+  { params }: { params: { id: string } }
+) {
   await dbConnect();
-  const { id } = await context.params;   // ✅ unwrap con await
+  const { id } = params;
   try {
     const body = await req.json();
     const eventoActualizado = await Evento.findByIdAndUpdate(id, body, { new: true });
@@ -34,9 +40,12 @@ export async function PUT(req: Request, context: { params: Promise<{ id: string 
 }
 
 // 🔹 DELETE: eliminar un evento por ID
-export async function DELETE(req: Request, context: { params: Promise<{ id: string }> }) {
+export async function DELETE(
+  req: Request,
+  { params }: { params: { id: string } }
+) {
   await dbConnect();
-  const { id } = await context.params;   // ✅ unwrap con await
+  const { id } = params;
   try {
     const eventoEliminado = await Evento.findByIdAndDelete(id);
     if (!eventoEliminado) {
