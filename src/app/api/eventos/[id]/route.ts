@@ -8,7 +8,7 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   await dbConnect();
-  const { id } = params;   // ✅ ya no usamos await
+  const { id } = params;   // ✅ objeto plano, sin await
   try {
     const evento = await Evento.findById(id);
     if (!evento) {
