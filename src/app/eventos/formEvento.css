@@ -1,0 +1,118 @@
+/* 🔹 Contenedor del formulario */
+.formEvento {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: #f0f8ff; /* azul tenue */
+  margin-bottom: 20px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+}
+
+/* 🔹 Título del formulario */
+.formEvento h2 {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #004080;
+  margin-bottom: 10px;
+}
+
+/* 🔹 Inputs y textarea */
+.formEvento input,
+.formEvento textarea {
+  padding: 8px;
+  border: 1px solid #aaa;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.formEvento input:focus,
+.formEvento textarea:focus {
+  outline: none;
+  border-color: #0066cc;
+  box-shadow: 0 0 4px #99ccff;
+}
+
+/* 🔹 Botón principal (Crear Evento) */
+.formEvento button {
+  background-color: #0066cc;
+  color: white;
+  padding: 10px;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.formEvento button:hover {
+  background-color: #004080;
+}
+
+/* 🔹 Botón "Ver listado" */
+.btnVerEventos {
+  background-color: #004080;   /* azul profundo */
+  color: #fff;
+  padding: 10px 18px;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  cursor: pointer;
+  margin-bottom: 16px;
+  transition: background-color 0.2s ease;
+}
+
+.btnVerEventos:hover {
+  background-color: #0066cc;   /* azul más claro al pasar el mouse */
+}
+
+/* 🔹 Botón Editar */
+.btnEditar {
+  background-color: #ff9900;   /* naranja para diferenciar */
+  color: #fff;
+  padding: 8px 14px;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: background-color 0.2s ease;
+}
+
+.btnEditar:hover {
+  background-color: #cc7a00;   /* tono más oscuro al pasar el mouse */
+}
+
+/* 🔹 Botón Eliminar */
+.btnEliminar {
+  background-color: #cc0000;   /* rojo para acción destructiva */
+  color: #fff;
+  padding: 8px 14px;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: background-color 0.2s ease;
+}
+
+.btnEliminar:hover {
+  background-color: #990000;   /* rojo más oscuro */
+}
+.calendarioTitulo {
+  font-size: 18px;       /* más pequeño */
+  font-weight: bold;
+  color: #004080;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.iconoCalendario {
+  font-size: 16px;       /* ícono discreto */
+  color: #0066cc;
+}

@@ -1,0 +1,131 @@
+/* Contenedor general */
+.listadoEventos {
+  padding: 20px;
+}
+
+/* Título principal */
+.listadoTitulo {
+  font-size: 20px;       /* más pequeño */
+  font-weight: bold;
+  color: #004080;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.iconoCalendario {
+  font-size: 18px;       /* ícono más pequeño */
+  color: #0066cc;
+}
+
+/* Botón volver al calendario */
+.btnVolver {
+  font-size: 14px;
+  padding: 4px 8px;
+  border: 1px solid #0066cc;
+  color: #0066cc;
+  background: transparent;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-bottom: 16px;
+  transition: background-color 0.2s ease;
+}
+
+.btnVolver:hover {
+  background-color: #f0f9ff;
+}
+
+/* Tarjeta de evento */
+.eventoCard {
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 16px;
+  background-color: #f9fbff;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  margin-bottom: 16px; /* separación entre tarjetas */
+}
+
+.eventoCard:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.12);
+}
+
+.eventoCard h2 {
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: #004080;
+  margin-bottom: 6px;
+}
+
+.eventoCard p {
+  margin: 4px 0;
+  font-size: 0.95rem;
+  color: #333;
+}
+
+.eventoCard strong {
+  color: #0066cc;
+}
+
+.eventoFecha {
+  font-size: 0.9rem;
+  color: #666;
+  margin-bottom: 8px;
+}
+
+/* Estado como badge */
+.estadoBadge {
+  display: inline-block;
+  font-size: 0.8rem;
+  padding: 4px 8px;
+  border-radius: 12px;
+  margin-top: 10px;
+}
+
+.estadoBadge.vigente {
+  background-color: #28a745;
+  color: #fff;
+}
+
+.estadoBadge.caducado {
+  background-color: #ccc;
+  color: #333;
+}
+
+/* Botones de acción */
+.accionesListado {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.btnAccion {
+  font-size: 14px;
+  padding: 6px 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+/* Editar */
+.btnEditar {
+  background-color: #0066cc;
+  color: #fff;
+}
+
+.btnEditar:hover {
+  background-color: #004080;
+}
+
+/* Eliminar */
+.btnEliminar {
+  background-color: #cc0000;
+  color: #fff;
+}
+
+.btnEliminar:hover {
+  background-color: #990000;
+}
