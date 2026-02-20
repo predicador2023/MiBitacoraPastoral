@@ -1,11 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";  // ✅ importar router
 import "../formEvento.css";
 
 export default function EditarEventoPage() {
   const { id } = useParams();
+  const router = useRouter();   // ✅ inicializar router
+
   const [formData, setFormData] = useState({
     titulo: "",
     fecha: "",
@@ -15,10 +17,9 @@ export default function EditarEventoPage() {
     subtipo: ""
   });
 
-  const [loading, setLoading] = useState(true);   // 🔹 nuevo estado para mostrar carga
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // 🔹 Cargar datos del evento al entrar
   useEffect(() => {
     const fetchEvento = async () => {
       try {
@@ -43,14 +44,13 @@ export default function EditarEventoPage() {
         setLoading(false);
       }
     };
-    fetchEvento();
+    if (id) fetchEvento();
   }, [id]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  // 🔹 Guardar cambios
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const payload = {
@@ -70,6 +70,7 @@ export default function EditarEventoPage() {
 
     if (res.ok) {
       alert("Evento actualizado correctamente ✅");
+      router.push("/eventos/listado");   // ✅ redirige al listado
     } else {
       alert("Error al actualizar evento ❌");
     }

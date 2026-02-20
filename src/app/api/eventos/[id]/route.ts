@@ -5,16 +5,21 @@ import Evento from "@/models/evento";        // tu modelo de eventos
 // 🔹 GET: obtener un evento por ID
 export async function GET(
   req: Request,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   await dbConnect();
-  const { id } = params;   // ✅ objeto plano, sin await
+  const { id } = await context.params;   // ✅ resolver Promise
   try {
     const evento = await Evento.findById(id);
     if (!evento) {
       return NextResponse.json({ error: "Evento no encontrado" }, { status: 404 });
     }
-    return NextResponse.json(evento);
+    // ✅ Convertir _id a string para coherencia
+    const eventoSerializado = {
+      ...evento.toObject(),
+      _id: evento._id.toString(),
+    };
+    return NextResponse.json(eventoSerializado);
   } catch (error) {
     return NextResponse.json({ error: "Error al buscar evento" }, { status: 500 });
   }
@@ -23,10 +28,10 @@ export async function GET(
 // 🔹 PUT: actualizar un evento por ID
 export async function PUT(
   req: Request,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   await dbConnect();
-  const { id } = params;
+  const { id } = await context.params;   // ✅ resolver Promise
   try {
     const body = await req.json();
     const eventoActualizado = await Evento.findByIdAndUpdate(id, body, { new: true });
@@ -42,10 +47,10 @@ export async function PUT(
 // 🔹 DELETE: eliminar un evento por ID
 export async function DELETE(
   req: Request,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   await dbConnect();
-  const { id } = params;
+  const { id } = await context.params;   // ✅ resolver Promise
   try {
     const eventoEliminado = await Evento.findByIdAndDelete(id);
     if (!eventoEliminado) {

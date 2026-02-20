@@ -38,7 +38,14 @@ export async function GET() {
   await dbConnect();
   try {
     const eventos = await Evento.find().sort({ fecha: 1 });
-    return NextResponse.json(eventos, { status: 200 });
+
+    // ✅ Convertir _id a string para el frontend
+    const eventosSerializados = eventos.map((e) => ({
+      ...e.toObject(),
+      _id: e._id.toString(),
+    }));
+
+    return NextResponse.json(eventosSerializados, { status: 200 });
   } catch (error) {
     return NextResponse.json({ error: "Error al obtener eventos", detalle: error }, { status: 500 });
   }
