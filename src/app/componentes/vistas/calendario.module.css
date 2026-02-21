@@ -1,22 +1,19 @@
-/* Contenedor general del calendario */
 .container {
   width: 100%;
   margin: 0 auto;
-  font-family: "Segoe UI", Arial, sans-serif; /* 🔹 fuente más clara */
+  font-family: "Segoe UI", Arial, sans-serif;
   background-color: transparent;
-  padding: 4px !important; /* tu ajuste permanente */
+  padding: 4px !important;
 }
 
-/* Título del mes */
 .titulo {
   text-align: center;
-  font-size: 14px;
+  font-size: 18px;
   font-weight: bold;
   margin-bottom: 8px;
-  color: #43A047; /* verde esperanza */
+  color: #333;
 }
 
-/* Grilla principal */
 .grid {
   display: grid;
   grid-template-columns: repeat(7, minmax(0, 1fr));
@@ -24,7 +21,6 @@
   border-collapse: collapse;
 }
 
-/* Cabecera de días de la semana */
 .diaSemana {
   border: 1px solid #ccc;
   background-color: #f0f0f0;
@@ -33,10 +29,9 @@
   text-align: center;
   padding: 4px 0;
   min-height: 28px;
-  line-height: 1.2;
+  line-height: 1;
 }
 
-/* Celdas de días */
 .celdaDia {
   border: 1px solid #ccc;
   background: #fff;
@@ -46,7 +41,6 @@
   box-sizing: border-box;
 }
 
-/* Número del día */
 .numeroDia {
   position: absolute;
   top: 2px;
@@ -55,67 +49,194 @@
   color: gray;
 }
 
-/* Texto dentro de las celdas */
-.textoOracion {
-  font-family: "Segoe UI", Arial, sans-serif;
-  font-size: 0.72rem;       /* 🔹 un poco más pequeño */
-  font-weight: bold;        /* en negrita */
-  color: #43A047;           /* verde esperanza */
-  line-height: 1;           /* 🔹 ultra compacto */
-  margin: 0 !important;     /* 🔹 sin espacio extra vertical */
-  padding: 0 !important;    /* 🔹 sin relleno adicional */
-  display: inline-block;    /* 🔹 evita expansión vertical */
-  vertical-align: middle;   /* 🔹 alinea mejor con el ícono */
-}
-
-/* Ícono dentro de las celdas */
-.iconoOracion {
-  font-size: 0.85rem;       /* 🔹 más pequeño para armonizar */
+/* 🔹 Oraciones en verde */
+.oracionDia {
+  background-color: #e8f5e9;
   color: #43A047;
-  margin-right: 0.2rem;
-  vertical-align: middle;
+  margin-top: 0.15rem;
+  border-radius: 4px;
+  padding: 0.15rem 0.25rem;
+  font-weight: bold;
+  line-height: 0.9;
+  text-align: left;
 }
 
-/* Tarjeta inferior (detalle al hacer click) */
+.textoOracion {
+  color: #43A047 !important;
+  font-size: 0.68rem;
+  display: -webkit-box; /* clamp aplicado sólo al texto */
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  word-break: break-word;
+}
+
+.iconoOracion {
+  color: #43A047 !important;
+  font-size: 0.55rem;
+  margin-left: 4px;
+  display: inline; /* 🔹 ícono en la misma línea */
+}
+
+/* 🔹 Eventos en azul */
+.eventoDia {
+  background-color: #e3f2fd;
+  color: #0d47a1;
+  margin-top: 0.15rem;
+  border-radius: 4px;
+  padding: 0.15rem 0.25rem;
+  font-weight: bold;
+  line-height: 0.9;
+  text-align: left;
+}
+
+.textoEvento {
+  color: #0d47a1 !important;
+  font-size: 0.68rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  word-break: break-word;
+}
+
+.iconoEvento {
+  color: #0d47a1 !important;
+  font-size: 0.55rem;
+  margin-left: 4px;
+  display: inline;
+}
+
+/* Tarjeta de detalle */
+.tarjeta {
+  margin-top: 1rem;
+  padding: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background: #fff;
+}
+
 .tarjeta h3 {
-  font-family: "Segoe UI", Arial, sans-serif;
-  font-size: 0.95rem;
+  font-size: 1rem;
   font-weight: bold;
   color: #43A047;
-  margin: 0;               /* 🔹 sin espacio extra */
-  line-height: 1.1;        /* 🔹 compacto */
+  margin: 0;
 }
 
 .tarjeta p {
-  font-family: "Segoe UI", Arial, sans-serif;
-  font-size: 0.8rem;
-  font-weight: bold;
-  line-height: 1.1;        /* 🔹 compacto */
-  color: #43A047;
-  margin: 0;               /* 🔹 sin espacio extra */
-  padding: 0;              /* 🔹 sin relleno adicional */
+  font-size: 0.85rem;
+  line-height: 1.2;
+  color: #333;
+  margin: 0.5rem 0 0;
 }
 
-/* 📱 Mobile first */
-@media (min-width: 330px) {
-  .titulo { font-size: 15px; }
-  .diaSemana { font-size: 12px; min-height: 30px; }
-  .celdaDia { min-height: 55px; }
-  .numeroDia { font-size: 10px; }
+.header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
 }
 
-/* 💻 Pantallas medianas */
-@media (min-width: 768px) {
-  .titulo { font-size: 18px; }
-  .diaSemana { font-size: 13px; min-height: 32px; }
-  .celdaDia { min-height: 70px; }
-  .numeroDia { font-size: 11px; }
+.navBtn {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
 }
 
-/* 🖥️ Pantallas grandes */
-@media (min-width: 1200px) {
-  .titulo { font-size: 20px; }
-  .diaSemana { font-size: 14px; min-height: 34px; }
-  .celdaDia { min-height: 90px; }
-  .numeroDia { font-size: 12px; }
+/* 📱 Ajustes para pantallas pequeñas */
+@media (max-width: 600px) {
+  .titulo {
+    font-size: 16px;
+  }
+
+  .diaSemana {
+    font-size: 9px;
+    padding: 2px 0;
+    line-height: 1;
+  }
+
+  .celdaDia {
+    min-height: 55px;
+  }
+
+  .numeroDia {
+    font-size: 8px;
+  }
+
+  .textoOracion, .textoEvento {
+    font-size: 0.62rem;
+    -webkit-line-clamp: 3;
+    line-height: 0.9;
+  }
+
+  .iconoOracion, .iconoEvento {
+    font-size: 0.5rem;
+  }
+
+  .tarjeta h3 {
+    font-size: 0.9rem;
+  }
+
+  .tarjeta p {
+    font-size: 0.75rem;
+  }
+
+  .navBtn {
+    font-size: 1.2rem;
+    padding: 0.2rem;
+  }
+
+  .header {
+    gap: 0.5rem;
+  }
+}
+
+/* 📱 Ajustes extra para pantallas muy pequeñas (ej. 330px) */
+@media (max-width: 330px) {
+  .titulo {
+    font-size: 15px;
+  }
+
+  .diaSemana {
+    font-size: 8px;
+    padding: 1px 0;
+    line-height: 1;
+  }
+
+  .celdaDia {
+    min-height: 50px;
+  }
+
+  .numeroDia {
+    font-size: 7px;
+  }
+
+  .textoOracion, .textoEvento {
+    font-size: 0.55rem;
+    -webkit-line-clamp: 3;
+    line-height: 0.9;
+  }
+
+  .iconoOracion, .iconoEvento {
+    font-size: 0.45rem;
+    margin-left: 3px;
+  }
+
+  .tarjeta h3 {
+    font-size: 0.85rem;
+  }
+
+  .tarjeta p {
+    font-size: 0.7rem;
+  }
+
+  .navBtn {
+    font-size: 1rem;
+    padding: 0.1rem;
+  }
+
+  .header {
+    gap: 0.3rem;
+  }
 }
