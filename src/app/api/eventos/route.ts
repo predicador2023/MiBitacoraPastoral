@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import dbConnect from "@/lib/dbConnect";
+import dbConnect from "@/lib/dbConnect";   // 👈 usar tu archivo real
 import Evento from "@/models/evento";
 
 // 🔹 Crear evento (POST)

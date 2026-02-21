@@ -12,6 +12,8 @@ type Nota = {
 export default function ListadoNotas() {
   const [notas, setNotas] = useState<Nota[]>([]);
   const [notaEditando, setNotaEditando] = useState<Nota | null>(null);
+  const [mensaje, setMensaje] = useState<string>("");
+  const [tipoMensaje, setTipoMensaje] = useState<"success" | "error" | "">("");
 
   useEffect(() => {
     refrescarNotas();
@@ -20,35 +22,58 @@ export default function ListadoNotas() {
   const refrescarNotas = async () => {
     try {
       const res = await fetch("/api/notas");
+      if (!res.ok) throw new Error("Error al cargar notas");
       const data = await res.json();
       setNotas(data);
     } catch (error) {
       console.error("Error cargando notas:", error);
+      setTipoMensaje("error");
+      setMensaje("❌ No se pudieron cargar las notas");
+      setTimeout(() => setMensaje(""), 4000);
     }
   };
 
   const eliminarNota = async (id: string) => {
-    await fetch("/api/notas", {
-      method: "DELETE",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ id }),
-    });
-    refrescarNotas();
+    try {
+      const res = await fetch(`/api/notas/${id}`, { method: "DELETE" });
+      if (!res.ok) throw new Error("Error al eliminar nota");
+      setTipoMensaje("success");
+      setMensaje("✅ Nota eliminada correctamente");
+      setTimeout(() => setMensaje(""), 3000);
+      refrescarNotas();
+    } catch (error) {
+      console.error("Error eliminando nota:", error);
+      setTipoMensaje("error");
+      setMensaje("❌ No se pudo eliminar la nota");
+      setTimeout(() => setMensaje(""), 4000);
+    }
   };
 
   const guardarCambios = async () => {
     if (!notaEditando) return;
-    await fetch("/api/notas", {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        id: notaEditando._id,
-        titulo: notaEditando.titulo,
-        contenido: notaEditando.contenido,
-      }),
-    });
-    setNotaEditando(null);
-    refrescarNotas();
+    try {
+      const res = await fetch(`/api/notas/${notaEditando._id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          titulo: notaEditando.titulo,
+          contenido: notaEditando.contenido,
+          fecha: new Date(),
+          autor: notaEditando.autor,
+        }),
+      });
+      if (!res.ok) throw new Error("Error al guardar cambios");
+      setNotaEditando(null);
+      setTipoMensaje("success");
+      setMensaje("✅ Cambios guardados correctamente");
+      setTimeout(() => setMensaje(""), 3000);
+      refrescarNotas();
+    } catch (error) {
+      console.error("Error guardando cambios:", error);
+      setTipoMensaje("error");
+      setMensaje("❌ No se pudieron guardar los cambios");
+      setTimeout(() => setMensaje(""), 4000);
+    }
   };
 
   return (
@@ -57,55 +82,24 @@ export default function ListadoNotas() {
         Listado de Notas
       </h2>
 
-      {/* Bloque fijo de referencia */}
-      <div
-        style={{
-          background: "#f0f4f8",
-          border: "1px solid #ccc",
-          borderRadius: "12px",
-          padding: "2rem",
-          marginBottom: "2rem",
-          textAlign: "center",
-          boxShadow: "0 2px 6px rgba(0,0,0,0.1)",
-        }}
-      >
-        <h3 style={{ marginBottom: "1rem", color: "#444" }}>
-          Ejemplo de Nota / Espacio reservado
-        </h3>
-        <p style={{ marginBottom: "0.75rem", color: "#666" }}>
-          Aquí se mostrará el contenido cuando lleguen los datos del backend.
-        </p>
-        <div style={{ display: "flex", justifyContent: "center", gap: "1rem" }}>
-          <button
-            style={{
-              background: "#d9534f",
-              color: "#fff",
-              border: "none",
-              padding: "0.6rem 1.2rem",
-              borderRadius: "6px",
-              cursor: "pointer",
-            }}
-            disabled
-          >
-            Eliminar
-          </button>
-          <button
-            style={{
-              background: "#a8d5ba",
-              color: "#333",
-              border: "none",
-              padding: "0.6rem 1.2rem",
-              borderRadius: "6px",
-              cursor: "pointer",
-            }}
-            disabled
-          >
-            Editar
-          </button>
+      {/* Mensaje de confirmación o error */}
+      {mensaje && (
+        <div
+          style={{
+            background: tipoMensaje === "success" ? "#e0ffe0" : "#ffe0e0",
+            border: tipoMensaje === "success" ? "1px solid #8bc34a" : "1px solid #f44336",
+            borderRadius: "8px",
+            padding: "0.75rem",
+            marginBottom: "1rem",
+            textAlign: "center",
+            color: tipoMensaje === "success" ? "#33691e" : "#b71c1c",
+            fontWeight: "bold",
+          }}
+        >
+          {mensaje}
         </div>
-      </div>
+      )}
 
-      {/* Notas reales */}
       {notas.map((nota) => (
         <div
           key={nota._id}
@@ -144,7 +138,15 @@ export default function ListadoNotas() {
               <h3>{nota.titulo}</h3>
               <p>{nota.contenido}</p>
               <p style={{ fontStyle: "italic", color: "#666" }}>
-                Fecha: {nota.fecha} | Autor: {nota.autor}
+                Fecha:{" "}
+                {nota.fecha
+                  ? new Date(nota.fecha).toLocaleDateString("es-AR", {
+                      day: "2-digit",
+                      month: "2-digit",
+                      year: "numeric",
+                    })
+                  : ""}{" "}
+                | Autor: {nota.autor}
               </p>
               <button
                 onClick={() => eliminarNota(nota._id)}

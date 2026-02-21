@@ -2,8 +2,6 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
-
-
 type Nota = {
   _id: string;
   titulo: string;
@@ -18,7 +16,7 @@ export default function HojaNotas() {
   const [titulo, setTitulo] = useState("");
   const [contenido, setContenido] = useState("");
   const [autor, setAutor] = useState(""); // vacío en el formulario
-  const [fecha, setFecha] = useState(new Date().toLocaleDateString());
+  const [fecha, setFecha] = useState<Date>(new Date()); // 👈 ahora es Date
 
   useEffect(() => {
     refrescarNotas();
@@ -38,13 +36,13 @@ export default function HojaNotas() {
         titulo,
         contenido,
         autor: autor || "Evangelista José Bedoya", // por defecto
-        fecha,
+        fecha: new Date(), // 👈 objeto Date real
       }),
     });
     setTitulo("");
     setContenido("");
     setAutor("");
-    setFecha(new Date().toLocaleDateString());
+    setFecha(new Date()); // 👈 reset como Date
     refrescarNotas();
   };
 
@@ -120,50 +118,57 @@ export default function HojaNotas() {
           color: "#555",
         }}
       >
-        <span>Fecha: {fecha}</span>
+        <span>
+          Fecha:{" "}
+          {fecha.toLocaleDateString("es-AR", {
+            day: "2-digit",
+            month: "2-digit",
+            year: "numeric",
+          })}
+        </span>
         <span>Autor: {autor}</span>
       </div>
 
-     <div
-  style={{
-    display: "flex",
-    justifyContent: "center",
-    gap: "1rem", // separación entre botones
-    marginBottom: "1rem",
-  }}
->
-  <button
-    onClick={guardarNota}
-    style={{
-      padding: "0.6rem 1.4rem",
-      background: "#a8d5ba",
-      color: "#333",
-      fontWeight: "bold",
-      border: "none",
-      borderRadius: "6px",
-      cursor: "pointer",
-      boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
-    }}
-  >
-    Guardar
-  </button>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          gap: "1rem", // separación entre botones
+          marginBottom: "1rem",
+        }}
+      >
+        <button
+          onClick={guardarNota}
+          style={{
+            padding: "0.6rem 1.4rem",
+            background: "#a8d5ba",
+            color: "#333",
+            fontWeight: "bold",
+            border: "none",
+            borderRadius: "6px",
+            cursor: "pointer",
+            boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+          }}
+        >
+          Guardar
+        </button>
 
-  <button
-    onClick={() => router.push("/notas/listado")}
-    style={{
-      padding: "0.6rem 1.4rem",
-      background: "#7d7bff",
-      color: "#fff",
-      fontWeight: "bold",
-      border: "none",
-      borderRadius: "6px",
-      cursor: "pointer",
-      boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
-    }}
-  >
-    Ver Notas
-  </button>
-</div>
+        <button
+          onClick={() => router.push("/notas/listado")}
+          style={{
+            padding: "0.6rem 1.4rem",
+            background: "#7d7bff",
+            color: "#fff",
+            fontWeight: "bold",
+            border: "none",
+            borderRadius: "6px",
+            cursor: "pointer",
+            boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+          }}
+        >
+          Ver Notas
+        </button>
+      </div>
 
       <hr style={{ margin: "1.5rem 0" }} />
 
@@ -181,8 +186,22 @@ export default function HojaNotas() {
         >
           <h3 style={{ marginBottom: "0.5rem" }}>{nota.titulo}</h3>
           <p style={{ marginBottom: "0.75rem" }}>{nota.contenido}</p>
-          <p style={{ fontStyle: "italic", color: "#666", marginBottom: "0.75rem" }}>
-            Fecha: {nota.fecha} | Autor: {nota.autor}
+          <p
+            style={{
+              fontStyle: "italic",
+              color: "#666",
+              marginBottom: "0.75rem",
+            }}
+          >
+            Fecha:{" "}
+            {nota.fecha
+              ? new Date(nota.fecha).toLocaleDateString("es-AR", {
+                  day: "2-digit",
+                  month: "2-digit",
+                  year: "numeric",
+                })
+              : ""}{" "}
+            | Autor: {nota.autor}
           </p>
           <button
             onClick={() => eliminarNota(nota._id)}
