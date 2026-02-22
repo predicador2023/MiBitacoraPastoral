@@ -28,17 +28,18 @@ export default function Calendario() {
       const eventos = await resEventos.json();
       const eventosConTipo = eventos.map((e: any) => ({ ...e, tipo: "eventos" }));
 
-      // más adelante podés hacer lo mismo con notas:
-      // const resNotas = await fetch(`/api/notas?year=${year}&month=${month+1}`);
-      // const notas = await resNotas.json();
-      // const notasConTipo = notas.map((n: any) => ({ ...n, tipo: "notas" }));
+      // ✅ Ahora también traemos las notas
+      const resNotas = await fetch(`/api/notas?year=${year}&month=${month+1}`);
+      const notas = await resNotas.json();
+      const notasConTipo = notas.map((n: any) => ({ ...n, tipo: "notas" }));
 
-      setRegistros([...oracionesConTipo, ...eventosConTipo]);
+      setRegistros([...oracionesConTipo, ...eventosConTipo, ...notasConTipo]);
     };
     fetchData();
   }, [year, month]);
 
   const daysInMonth = new Date(year, month + 1, 0).getDate();
+  const firstDayOfMonth = new Date(year, month, 1).getDay(); // 0=Dom, 1=Lun...
 
   const handlePrevMonth = () => {
     if (year === 2026 && month === 0) return;
@@ -59,6 +60,16 @@ export default function Calendario() {
     }
   };
 
+  // Generamos las celdas: primero vacías, luego los días reales
+  const blanks = Array(firstDayOfMonth).fill(null);
+  const daysArray = Array(daysInMonth).fill(null).map((_, i) => i + 1);
+  let allDays = [...blanks, ...daysArray];
+
+  // ✅ Añadimos celdas vacías al final para completar la última fila
+  const totalCells = Math.ceil(allDays.length / 7) * 7;
+  const endBlanks = Array(totalCells - allDays.length).fill(null);
+  allDays = [...allDays, ...endBlanks];
+
   return (
     <div className={styles.container}>
       <div className={styles.header}>
@@ -74,10 +85,12 @@ export default function Calendario() {
           <div key={i} className={styles.diaSemana}>{dia}</div>
         ))}
 
-        {[...Array(daysInMonth)].map((_, i) => {
-          const dia = i + 1;
-          const fecha = new Date(year, month, dia);
+        {allDays.map((dia, i) => {
+          if (!dia) {
+            return <div key={`blank-${i}`} className={styles.celdaDia}></div>;
+          }
 
+          const fecha = new Date(year, month, dia);
           const registrosDia = registros.filter(
             (r) => new Date(r.fecha).toDateString() === fecha.toDateString()
           );
@@ -85,38 +98,52 @@ export default function Calendario() {
           return (
             <div key={dia} className={styles.celdaDia}>
               <span className={styles.numeroDia}>{dia}</span>
-              {registrosDia.map((registro) => {
-                const tipoNormalizado = String(registro.tipo || "").toLowerCase();
 
-                const esEvento = tipoNormalizado === "eventos";
-                const esOracion = tipoNormalizado === "oraciones";
-                const esNota = tipoNormalizado === "notas";
-
-                return (
+              {/* Notas primero */}
+              {registrosDia
+                .filter((r) => String(r.tipo).toLowerCase() === "notas")
+                .map((nota) => (
                   <div
-                    key={registro.titulo}
-                    className={
-                      esOracion ? styles.oracionDia :
-                      esEvento ? styles.eventoDia :
-                      esNota ? styles.notaDia :
-                      styles.otroDia
-                    }
-                    onClick={() => setSeleccionado(registro)}
+                    key={nota.titulo}
+                    className={styles.notaDia}
+                    onClick={() => setSeleccionado(nota)}
                   >
-                    {esOracion && <span className={styles.iconoOracion}>🙏</span>}
-                    {esEvento && <span className={styles.iconoEvento}>📅</span>}
-                    {esNota && <span className={styles.iconoNota}>📝</span>}
-                    <span className={
-                      esOracion ? styles.textoOracion :
-                      esEvento ? styles.textoEvento :
-                      esNota ? styles.textoNota :
-                      styles.textoOtro
-                    }>
-                      {registro.titulo}
-                    </span>
+                    <span className={styles.textoNota}>{nota.titulo} ✏️</span>
                   </div>
-                );
-              })}
+                ))}
+
+              {/* Después el resto (eventos y oraciones) */}
+              {registrosDia
+                .filter((r) => String(r.tipo).toLowerCase() !== "notas")
+                .map((registro) => {
+                  const tipoNormalizado = String(registro.tipo || "").toLowerCase();
+                  const esEvento = tipoNormalizado === "eventos";
+                  const esOracion = tipoNormalizado === "oraciones";
+
+                  return (
+                    <div
+                      key={registro.titulo}
+                      className={
+                        esOracion ? styles.oracionDia :
+                        esEvento ? styles.eventoDia :
+                        styles.otroDia
+                      }
+                      onClick={() => setSeleccionado(registro)}
+                    >
+                      {esOracion && <span className={styles.iconoOracion}>🙏</span>}
+                      {esEvento && <span className={styles.iconoEvento}>📅</span>}
+                      <span
+                        className={
+                          esOracion ? styles.textoOracion :
+                          esEvento ? styles.textoEvento :
+                          styles.textoOtro
+                        }
+                      >
+                        {registro.titulo}
+                      </span>
+                    </div>
+                  );
+                })}
             </div>
           );
         })}

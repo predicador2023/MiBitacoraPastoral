@@ -49,6 +49,36 @@
   color: gray;
 }
 
+/* 🔹 Notas en amarillo */
+.notaDia {
+  background: #fff176; /* amarillo vibrante */
+  color: #333;
+  margin-top: 0.15rem;
+  border-radius: 4px;
+  padding: 0.15rem 0.25rem;
+  font-weight: bold;
+  line-height: 0.9;
+  text-align: left;
+  cursor: pointer;
+}
+
+.textoNota {
+  color: #333 !important;
+  font-size: 0.68rem;
+  display: -webkit-box; /* clamp aplicado sólo al texto */
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  word-break: break-word;
+}
+
+.iconoNota {
+  color: #333 !important;
+  font-size: 0.55rem;
+  margin-left: 4px;
+  display: inline; /* ícono en la misma línea */
+}
+
 /* 🔹 Oraciones en verde */
 .oracionDia {
   background-color: #e8f5e9;
@@ -64,7 +94,7 @@
 .textoOracion {
   color: #43A047 !important;
   font-size: 0.68rem;
-  display: -webkit-box; /* clamp aplicado sólo al texto */
+  display: -webkit-box;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
@@ -75,7 +105,7 @@
   color: #43A047 !important;
   font-size: 0.55rem;
   margin-left: 4px;
-  display: inline; /* 🔹 ícono en la misma línea */
+  display: inline;
 }
 
 /* 🔹 Eventos en azul */
@@ -164,13 +194,13 @@
     font-size: 8px;
   }
 
-  .textoOracion, .textoEvento {
+  .textoOracion, .textoEvento, .textoNota {
     font-size: 0.62rem;
     -webkit-line-clamp: 3;
     line-height: 0.9;
   }
 
-  .iconoOracion, .iconoEvento {
+  .iconoOracion, .iconoEvento, .iconoNota {
     font-size: 0.5rem;
   }
 
@@ -212,13 +242,13 @@
     font-size: 7px;
   }
 
-  .textoOracion, .textoEvento {
+  .textoOracion, .textoEvento, .textoNota {
     font-size: 0.55rem;
     -webkit-line-clamp: 3;
     line-height: 0.9;
   }
 
-  .iconoOracion, .iconoEvento {
+  .iconoOracion, .iconoEvento, .iconoNota {
     font-size: 0.45rem;
     margin-left: 3px;
   }
