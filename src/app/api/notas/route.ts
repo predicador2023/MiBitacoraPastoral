@@ -2,11 +2,11 @@ import { NextResponse } from "next/server";
 import dbConnect from "@/lib/dbConnect";
 import Nota from "@/models/nota";
 
-// ✅ GET: obtener todas las notas
+// ✅ GET: obtener todas las notas ordenadas por fecha descendente
 export async function GET() {
   await dbConnect();
   try {
-    const notas = await Nota.find({});
+    const notas = await Nota.find({}).sort({ fecha: -1 }); // 👈 cambio clave
     return NextResponse.json(notas);
   } catch (error: any) {
     return NextResponse.json(

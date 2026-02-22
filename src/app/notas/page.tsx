@@ -1,6 +1,5 @@
-// src/app/notas/page.tsx
-import HojaNota from "./hojaNotas";
+import HojaNotas from "./hojaNotas";
 
-export default function PageNotas() {
-  return <HojaNota />;
+export default function Page() {
+  return <HojaNotas />;
 }
