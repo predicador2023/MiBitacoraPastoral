@@ -15,8 +15,8 @@ export default function HojaNotas() {
   const [notas, setNotas] = useState<Nota[]>([]);
   const [titulo, setTitulo] = useState("");
   const [contenido, setContenido] = useState("");
-  const [autor, setAutor] = useState(""); // vacío en el formulario
-  const [fecha, setFecha] = useState<Date>(new Date()); // 👈 ahora es Date
+  const [autor, setAutor] = useState("");
+  const [fecha, setFecha] = useState<Date>(new Date());
 
   useEffect(() => {
     refrescarNotas();
@@ -28,6 +28,7 @@ export default function HojaNotas() {
     setNotas(data);
   };
 
+  // ✅ Crear nota
   const guardarNota = async () => {
     await fetch("/api/notas", {
       method: "POST",
@@ -35,22 +36,46 @@ export default function HojaNotas() {
       body: JSON.stringify({
         titulo,
         contenido,
-        autor: autor || "Evangelista José Bedoya", // por defecto
-        fecha: new Date(), // 👈 objeto Date real
+        autor: autor || "Evangelista José Bedoya",
+        fecha: new Date().toISOString(),
       }),
     });
     setTitulo("");
     setContenido("");
     setAutor("");
-    setFecha(new Date()); // 👈 reset como Date
+    setFecha(new Date());
     refrescarNotas();
+    // ✅ Redirigir al listado después de guardar
+    router.push("/notas/listado");
   };
 
-  const eliminarNota = async (id: string) => {
-    await fetch("/api/notas", {
-      method: "DELETE",
+  // ✅ Actualizar nota
+  const actualizarNota = async (id: string) => {
+    const res = await fetch(`/api/notas/${id}`, {
+      method: "PUT",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ id }),
+      body: JSON.stringify({
+        titulo,
+        contenido,
+        autor: autor || "Evangelista José Bedoya",
+        fecha: fecha.toISOString(),
+      }),
+    });
+
+    const data = await res.json();
+    if (!res.ok) {
+      console.error("Error al actualizar:", data);
+    } else {
+      refrescarNotas();
+      // ✅ Redirigir al listado después de actualizar
+      router.push("/notas/listado");
+    }
+  };
+
+  // ✅ Eliminar nota
+  const eliminarNota = async (id: string) => {
+    await fetch(`/api/notas/${id}`, {
+      method: "DELETE",
     });
     refrescarNotas();
   };
@@ -58,7 +83,7 @@ export default function HojaNotas() {
   return (
     <div
       style={{
-        maxWidth: "340px", // vista móvil
+        maxWidth: "340px",
         margin: "1rem auto",
         padding: "1rem",
         background: "#fdf6ec",
@@ -69,7 +94,7 @@ export default function HojaNotas() {
       <h2
         style={{
           textAlign: "center",
-          fontSize: "1rem", // más pequeño
+          fontSize: "1rem",
           marginBottom: "1rem",
           color: "#444",
         }}
@@ -99,10 +124,10 @@ export default function HojaNotas() {
         onChange={(e) => setContenido(e.target.value)}
         style={{
           width: "100%",
-          height: "70vh", // ocupa casi todo el largo de la pantalla
+          height: "70vh",
           padding: "1rem",
           marginBottom: "1rem",
-          fontSize: "1.2rem", // cuerpo más grande
+          fontSize: "1.2rem",
           borderRadius: "6px",
           border: "1px solid #ccc",
           resize: "none",
@@ -133,7 +158,7 @@ export default function HojaNotas() {
         style={{
           display: "flex",
           justifyContent: "center",
-          gap: "1rem", // separación entre botones
+          gap: "1rem",
           marginBottom: "1rem",
         }}
       >
@@ -203,19 +228,34 @@ export default function HojaNotas() {
               : ""}{" "}
             | Autor: {nota.autor}
           </p>
-          <button
-            onClick={() => eliminarNota(nota._id)}
-            style={{
-              background: "#d9534f",
-              color: "#fff",
-              border: "none",
-              padding: "0.4rem 0.8rem",
-              borderRadius: "6px",
-              cursor: "pointer",
-            }}
-          >
-            Eliminar
-          </button>
+          <div style={{ display: "flex", gap: "0.5rem" }}>
+            <button
+              onClick={() => actualizarNota(nota._id)}
+              style={{
+                background: "#f0ad4e",
+                color: "#fff",
+                border: "none",
+                padding: "0.4rem 0.8rem",
+                borderRadius: "6px",
+                cursor: "pointer",
+              }}
+            >
+              Actualizar
+            </button>
+            <button
+              onClick={() => eliminarNota(nota._id)}
+              style={{
+                background: "#d9534f",
+                color: "#fff",
+                border: "none",
+                padding: "0.4rem 0.8rem",
+                borderRadius: "6px",
+                cursor: "pointer",
+              }}
+            >
+              Eliminar
+            </button>
+          </div>
         </div>
       ))}
     </div>

@@ -1,45 +1,81 @@
 import { NextResponse } from "next/server";
-import dbConnect from "@/lib/dbConnect";   // 👈 usar tu archivo real
+import dbConnect from "@/lib/dbConnect";
 import Nota from "@/models/nota";
 
-// GET: obtener una nota por ID
+// ✅ GET: obtener una nota por ID
 export async function GET(
   req: Request,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   await dbConnect();
-  const nota = await Nota.findById(params.id);
-  return NextResponse.json(nota);
+  const { id } = await context.params; // 👈 corrección
+
+  try {
+    const nota = await Nota.findById(id);
+    if (!nota) {
+      return NextResponse.json({ mensaje: "Nota no encontrada" }, { status: 404 });
+    }
+    return NextResponse.json(nota);
+  } catch (error: any) {
+    return NextResponse.json(
+      { mensaje: "Error al obtener nota", error: error.message },
+      { status: 500 }
+    );
+  }
 }
 
-// PUT: actualizar una nota por ID
+// ✅ PUT: actualizar una nota por ID
 export async function PUT(
   req: Request,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   await dbConnect();
-  const body = await req.json();
+  const { id } = await context.params; // 👈 corrección
 
-  const notaActualizada = await Nota.findByIdAndUpdate(
-    params.id,
-    {
-      titulo: body.titulo,
-      contenido: body.contenido,
-      fecha: new Date(body.fecha),
-      autor: body.autor,
-    },
-    { new: true }
-  );
+  try {
+    const body = await req.json();
+    const notaActualizada = await Nota.findByIdAndUpdate(
+      id,
+      {
+        titulo: body.titulo,
+        contenido: body.contenido,
+        fecha: body.fecha ? new Date(body.fecha) : new Date(),
+        autor: body.autor,
+      },
+      { new: true }
+    );
 
-  return NextResponse.json(notaActualizada);
+    if (!notaActualizada) {
+      return NextResponse.json({ mensaje: "Nota no encontrada" }, { status: 404 });
+    }
+
+    return NextResponse.json(notaActualizada);
+  } catch (error: any) {
+    return NextResponse.json(
+      { mensaje: "Error al actualizar nota", error: error.message },
+      { status: 500 }
+    );
+  }
 }
 
-// DELETE: eliminar una nota por ID
+// ✅ DELETE: eliminar una nota por ID
 export async function DELETE(
   req: Request,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   await dbConnect();
-  await Nota.findByIdAndDelete(params.id);
-  return NextResponse.json({ mensaje: "Nota eliminada" });
+  const { id } = await context.params; // 👈 corrección
+
+  try {
+    const notaEliminada = await Nota.findByIdAndDelete(id);
+    if (!notaEliminada) {
+      return NextResponse.json({ mensaje: "Nota no encontrada" }, { status: 404 });
+    }
+    return NextResponse.json({ mensaje: "Nota eliminada correctamente" });
+  } catch (error: any) {
+    return NextResponse.json(
+      { mensaje: "Error al eliminar nota", error: error.message },
+      { status: 500 }
+    );
+  }
 }
