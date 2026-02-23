@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import dbConnect from "@/lib/dbConnect";
 import Nota from "@/models/nota";
+import mongoose from "mongoose";
 
 // ✅ GET: obtener una nota por ID
 export async function GET(
@@ -8,10 +9,10 @@ export async function GET(
   context: { params: Promise<{ id: string }> }
 ) {
   await dbConnect();
-  const { id } = await context.params; // 👈 corrección
+  const { id } = await context.params; // 👈 usar await aquí
 
   try {
-    const nota = await Nota.findById(id);
+    const nota = await Nota.findById(new mongoose.Types.ObjectId(id));
     if (!nota) {
       return NextResponse.json({ mensaje: "Nota no encontrada" }, { status: 404 });
     }
@@ -30,12 +31,12 @@ export async function PUT(
   context: { params: Promise<{ id: string }> }
 ) {
   await dbConnect();
-  const { id } = await context.params; // 👈 corrección
+  const { id } = await context.params; // 👈 usar await aquí
 
   try {
     const body = await req.json();
     const notaActualizada = await Nota.findByIdAndUpdate(
-      id,
+      new mongoose.Types.ObjectId(id),
       {
         titulo: body.titulo,
         contenido: body.contenido,
@@ -64,10 +65,10 @@ export async function DELETE(
   context: { params: Promise<{ id: string }> }
 ) {
   await dbConnect();
-  const { id } = await context.params; // 👈 corrección
+  const { id } = await context.params; // 👈 usar await aquí
 
   try {
-    const notaEliminada = await Nota.findByIdAndDelete(id);
+    const notaEliminada = await Nota.findByIdAndDelete(new mongoose.Types.ObjectId(id));
     if (!notaEliminada) {
       return NextResponse.json({ mensaje: "Nota no encontrada" }, { status: 404 });
     }

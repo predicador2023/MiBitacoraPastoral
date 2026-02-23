@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import styles from "../hojaNotas.module.css";
 
 type Nota = {
@@ -11,6 +12,7 @@ type Nota = {
 };
 
 export default function ListadoNotas() {
+  const router = useRouter();
   const [notas, setNotas] = useState<Nota[]>([]);
   const [mostrarTodas, setMostrarTodas] = useState(false);
   const [expandido, setExpandido] = useState<{ [key: string]: boolean }>({});
@@ -34,8 +36,15 @@ export default function ListadoNotas() {
   };
 
   const eliminarNota = async (id: string) => {
-    await fetch(`/api/notas/${id}`, { method: "DELETE" });
-    await refrescarNotas();
+    try {
+      const res = await fetch(`/api/notas/${id}`, { method: "DELETE" });
+      if (res.ok) {
+        // ✅ actualiza estado local inmediatamente
+        setNotas((prevNotas) => prevNotas.filter((nota) => nota._id !== id));
+      }
+    } catch (error) {
+      console.error("Error al eliminar nota:", error);
+    }
   };
 
   const notasMostradas = mostrarTodas ? notas : notas.slice(0, 10);
@@ -89,6 +98,15 @@ export default function ListadoNotas() {
               className={`${styles.btn} ${styles.rojo}`}
             >
               Eliminar
+            </button>
+            <button
+              onClick={() => {
+                console.log("Editando nota con id:", nota._id); // ✅ log para confirmar
+                router.push(`/notas/editar/${nota._id}`);
+              }}
+              className={`${styles.btn} ${styles.naranja}`}
+            >
+              Editar
             </button>
           </div>
         </div>

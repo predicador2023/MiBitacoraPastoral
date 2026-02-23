@@ -26,9 +26,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="es">
+      <head>
+        {/* 🔹 Aquí van los meta y manifest */}
+        <link rel="manifest" href="/manifest.json" />
+        <meta name="theme-color" content="#4a90e2" />
+      </head>
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
         <MantineProvider>
-          {/* 🔹 Ya no ponemos Header aquí */}
           {children}
         </MantineProvider>
       </body>
