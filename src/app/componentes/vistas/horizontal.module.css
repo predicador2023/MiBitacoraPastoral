@@ -1,0 +1,52 @@
+.contenedor {
+  display: flex !important;
+  flex-direction: row;
+  gap: 1rem;
+  overflow-x: auto;
+  max-width: 100%;
+  padding: 0.5rem;
+}
+
+.tarjeta {
+  flex-shrink: 0;
+  flex: 0 0 50% !important; /* 🔹 solo dos tarjetas por viewport */
+  border-radius: 8px;
+  padding: 1rem;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: all 0.3s ease;
+  color: #fff !important; /* 🔹 texto blanco */
+}
+
+.franja {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  background: rgba(255,255,255,0.2) !important; /* 🔹 franja transparente */
+  padding: 0.3rem 0.5rem;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  margin-bottom: 0.5rem;
+  color: #fff !important;
+}
+
+.icono {
+  font-size: 2rem;
+  margin: 0.5rem 0;
+  color: #fff !important;
+}
+
+.titulo {
+  font-size: 1.4rem;
+  margin: 0.5rem 0;
+  text-align: center;
+  color: #fff !important;
+}
+
+.subtitulo {
+  font-size: 0.9rem;
+  text-align: center;
+  color: #fff !important;
+}

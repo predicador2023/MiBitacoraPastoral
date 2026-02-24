@@ -1,147 +1,145 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import styles from "./horizontal.module.css";
 
-type Evento = {
-  id: number;
+type Item = {
+  id?: string;
   titulo: string;
-  descripcion: string;
-  tipo: "reunion" | "oracion" | "salida" | "visita";
-  fecha: string;
-  hora: string;
+  descripcion?: string;
+  tipo: "evento" | "nota" | "oracion";
+  fecha?: string;
+  hora?: string;
+  fechaReferencia: string;
 };
 
-const eventos: Evento[] = [
-  { id: 1, titulo: "Reunión de equipo", descripcion: "Planificación semanal", tipo: "reunion", fecha: "29 ENE", hora: "18:00" },
-  { id: 2, titulo: "Oración comunitaria", descripcion: "Encuentro espiritual", tipo: "oracion", fecha: "30 ENE", hora: "20:00" },
-  { id: 3, titulo: "Salida pastoral", descripcion: "Visita a familias", tipo: "salida", fecha: "31 ENE", hora: "10:00" },
-  { id: 4, titulo: "Visita hospital", descripcion: "Acompañamiento", tipo: "visita", fecha: "01 FEB", hora: "15:00" },
-];
-
 export default function Horizontal() {
-  const [current, setCurrent] = useState(0);
+  const [items, setItems] = useState<Item[]>([]);
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const [resEventos, resNotas, resOraciones] = await Promise.all([
+          fetch("/api/eventos"),
+          fetch("/api/notas"),
+          fetch("/api/oraciones"),
+        ]);
+
+        const [dataEventos, dataNotas, dataOraciones] = await Promise.all([
+          resEventos.json(),
+          resNotas.json(),
+          resOraciones.json(),
+        ]);
+
+        const eventos = dataEventos.map((e: any) => ({
+          id: e._id || e.id,
+          titulo: e.titulo,
+          descripcion: e.descripcion,
+          tipo: "evento",
+          fecha: e.fecha,
+          hora: e.hora,
+          fechaReferencia: e.fecha,
+        }));
+
+        const notas = dataNotas.map((n: any) => ({
+          id: n._id || n.id,
+          titulo: n.titulo,
+          descripcion: n.contenido,
+          tipo: "nota",
+          fecha: n.createdAt,
+          fechaReferencia: n.createdAt,
+        }));
+
+        const oraciones = dataOraciones.map((o: any) => ({
+          id: o._id || o.id,
+          titulo: o.titulo,
+          descripcion: o.contenido,
+          tipo: "oracion",
+          fecha: o.createdAt,
+          fechaReferencia: o.createdAt,
+        }));
+
+        const todos = [...eventos, ...notas, ...oraciones];
+
+        const ordenados = todos.sort(
+          (a, b) =>
+            new Date(b.fechaReferencia).getTime() -
+            new Date(a.fechaReferencia).getTime()
+        );
+
+        setItems(ordenados.slice(0, 20));
+      } catch (error) {
+        console.error("Error cargando datos", error);
+      }
+    }
+    fetchData();
+  }, []);
 
   return (
-    <div className="contenedor">
-      {eventos.map((evento, index) => (
-        <div
-          key={evento.id}
-          className={`tarjeta ${index === current ? "activa" : ""}`}
-          style={{ background: getColor(evento.tipo) }}
-        >
-          {/* Franja superior con fecha y hora */}
-          <div className="franja">
-            <span className="fecha">{evento.fecha}</span>
-            <span className="hora">{evento.hora}</span>
-          </div>
-
-          {/* Icono simbólico */}
-          <div className="icono">{getIcon(evento.tipo)}</div>
-
-          {/* Texto principal */}
-          <h3>{evento.titulo}</h3>
-          <p>{evento.descripcion}</p>
-        </div>
+    <div className={styles.contenedor}>
+      {items.map((item, index) => (
+        <Tarjeta key={item.id ?? index} item={item} />
       ))}
-
-      <style jsx>{`
-        .contenedor {
-          display: flex;
-          flex-direction: row;
-          gap: 0.5rem;
-          overflow-x: auto;
-          max-width: 100%;
-          padding: 0.5rem;
-        }
-
-        .tarjeta {
-          flex-shrink: 0;
-          width: 220px;
-          height: auto;
-          border-radius: 8px;
-          padding: 1rem;
-          box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-          display: flex;
-          flex-direction: column;
-          justify-content: flex-start;
-          align-items: center;
-          color: #fff;
-          transition: all 0.3s ease;
-          position: relative;
-        }
-
-        .tarjeta.activa {
-          transform: translateX(0);
-          opacity: 1;
-        }
-
-        .tarjeta:not(.activa) {
-          transform: translateX(10px);
-          opacity: 0.9;
-        }
-
-        .franja {
-          width: 100%;
-          display: flex;
-          justify-content: space-between;
-          background: rgba(255,255,255,0.2);
-          padding: 0.3rem 0.5rem;
-          border-radius: 6px;
-          font-size: 0.8rem;
-          margin-bottom: 0.5rem;
-        }
-
-        .fecha {
-          font-weight: bold;
-        }
-
-        .hora {
-          font-style: italic;
-        }
-
-        .icono {
-          font-size: 2rem;
-          margin: 0.5rem 0;
-        }
-
-        /* 🔹 Ajuste para celulares entre 330px y 430px */
-        @media (min-width: 330px) and (max-width: 430px) {
-          .tarjeta {
-            width: calc(50% - 0.5rem);
-            height: 75vh;
-          }
-        }
-      `}</style>
     </div>
   );
 }
 
-function getColor(tipo: string) {
-  switch (tipo) {
-    case "reunion":
-      return "#0077B6"; // azul
-    case "oracion":
-      return "#6A4C93"; // violeta
-    case "salida":
-      return "#FF6B6B"; // coral
-    case "visita":
-      return "#4CAF50"; // verde
-    default:
-      return "#333";
-  }
+function Tarjeta({ item }: { item: Item }) {
+  return (
+    <div className={styles.tarjeta} style={{ background: getColor(item.tipo) }}>
+      <div className={styles.franja}>
+        <span>{formatFecha(item.fecha)}</span>
+        <span>{formatHora(item.fecha, item.hora)}</span>
+      </div>
+      <div className={styles.icono}>{getIcon(item.tipo)}</div>
+      <h3 className={styles.titulo}>{item.titulo}</h3>
+      <p className={styles.subtitulo}>{getSubtitulo(item.descripcion)}</p>
+    </div>
+  );
 }
 
 function getIcon(tipo: string) {
   switch (tipo) {
-    case "reunion":
-      return "📅";
-    case "oracion":
-      return "🙏";
-    case "salida":
-      return "🚶";
-    case "visita":
-      return "🏥";
-    default:
-      return "⭐";
+    case "evento": return "📅";
+    case "nota": return "✍️";
+    case "oracion": return "🙏";
+    default: return "⭐";
   }
+}
+
+function getColor(tipo: string) {
+  switch (tipo) {
+    case "evento": return "#0077B6";
+    case "nota": return "#6A4C93";
+    case "oracion": return "#4CAF50";
+    default: return "#333";
+  }
+}
+
+function parseFechaHora(fecha?: string, hora?: string) {
+  if (!fecha) return null;
+  if (fecha.includes("/")) {
+    const [dia, mes, año] = fecha.split("/");
+    const horaFinal = hora ? hora : "00:00";
+    return new Date(`${año}-${mes}-${dia}T${horaFinal}:00`);
+  }
+  return new Date(fecha);
+}
+
+function formatFecha(fecha?: string) {
+  const d = parseFechaHora(fecha);
+  if (!d || isNaN(d.getTime())) return "";
+  return d.toLocaleDateString("es-AR", { day: "2-digit", month: "short" }).toUpperCase();
+}
+
+function formatHora(fecha?: string, hora?: string) {
+  if (!hora) return ""; // 🔹 si no hay hora, queda vacío
+  const d = parseFechaHora(fecha, hora);
+  if (!d || isNaN(d.getTime())) return "";
+  return d.toLocaleTimeString("es-AR", { hour: "2-digit", minute: "2-digit" });
+}
+
+function getSubtitulo(texto?: string) {
+  if (!texto) return "";
+  return texto.length > 20 ? texto.slice(0, 20) + "..." : texto;
 }
