@@ -13,6 +13,7 @@ export default function Header({ setVista }: Props) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [query, setQuery] = useState("");
+  const [darkMode, setDarkMode] = useState(false);
 
   return (
     <>
@@ -21,41 +22,36 @@ export default function Header({ setVista }: Props) {
           display: "grid",
           gridTemplateColumns: "1fr 1fr 1fr 1fr",
           alignItems: "center",
-          padding: "0.5rem", // 🔹 menos padding general
+          padding: "0.5rem",
           background: "#E3F2FD",
           borderBottom: "1px solid #ddd",
           gap: "0.5rem",
         }}
       >
-        {/* Logo */}
-        <div style={{ textAlign: "left" }}>
-          <h2 style={{ margin: 0, fontSize: "1rem" }}>Bitácora</h2>
-        </div>
+       {/* Logo en el Header */}
+   <div style={{ textAlign: "left" }}>
+    <img
+    src="/logo-dorado-biblia.png"
+    alt="Logo pastoral"
+    className="header-logo"
+    />
+   </div>
+
+  
 
         {/* Selector compacto */}
         <div style={{ textAlign: "center" }}>
-          <div
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: "0.3rem",
-              fontSize: "0.8rem",      // 🔹 más pequeño
-              padding: "0.2rem 0.5rem", // 🔹 menos relleno
-              height: "1.8rem",         // 🔹 más bajo
-            }}
-          >
-            <SelectorVista setVista={setVista} />
-          </div>
+          <SelectorVista setVista={setVista} />
         </div>
 
-        {/* Buscador más grande */}
+        {/* Buscador */}
         <div style={{ textAlign: "center" }}>
           <button
             onClick={() => setSearchOpen(!searchOpen)}
             style={{
               background: "none",
               border: "none",
-             fontSize: "1.45rem", // 🔹 20% más chico
+              fontSize: "1.45rem",
               cursor: "pointer",
             }}
             aria-label="Abrir buscador"
@@ -64,14 +60,14 @@ export default function Header({ setVista }: Props) {
           </button>
         </div>
 
-        {/* Menú */}
+        {/* Menú hamburguesa */}
         <div style={{ textAlign: "right" }}>
           <button
-            onClick={() => setMenuOpen(!menuOpen)}
+            onClick={() => setMenuOpen(true)}
             style={{
               background: "none",
               border: "none",
-              fontSize: "1.3rem", // 🔹 un poco más compacto
+              fontSize: "1.3rem",
               cursor: "pointer",
             }}
             aria-label="Abrir menú"
@@ -89,21 +85,131 @@ export default function Header({ setVista }: Props) {
         />
       )}
 
+      {/* Overlay + menú lateral */}
       {menuOpen && (
-        <nav
-          style={{
-            background: "#fff",
-            boxShadow: "0 2px 6px rgba(0,0,0,0.1)",
-            padding: "0.8rem",
-          }}
-        >
-          <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
-            <li><Link href="/eventos">📅 Eventos</Link></li>
-            <li><Link href="/notas">📝 Notas</Link></li>
-            <li><Link href="/oraciones">🙏 Oraciones</Link></li>
-          </ul>
-        </nav>
+        <>
+          {/* Overlay oscuro con blur */}
+          <div
+            onClick={() => setMenuOpen(false)}
+            style={{
+              position: "fixed",
+              top: 0,
+              left: 0,
+              width: "100%",
+              height: "100%",
+              backgroundColor: "rgba(0,0,0,0.7)",
+              backdropFilter: "blur(4px)",
+              zIndex: 999,
+            }}
+          />
+
+          {/* Panel lateral */}
+          <div
+            style={{
+              position: "fixed",
+              top: 0,
+              left: 0,
+              width: "250px",
+              height: "100%",
+              backgroundColor: "#2b2835",
+              boxShadow: "2px 0 6px rgba(0,0,0,0.2)",
+              zIndex: 1000,
+              padding: "1rem",
+              display: "flex",
+              flexDirection: "column",
+              animation: "slideIn 0.3s forwards",
+              color: "white", // 🔹 todo el texto en blanco
+            }}
+          >
+            {/* Botón de cierre discreto en blanco */}
+            <div style={{ textAlign: "right" }}>
+              <button
+                onClick={() => setMenuOpen(false)}
+                style={{
+                  background: "none",
+                  border: "none",
+                  fontSize: "1.2rem",
+                  cursor: "pointer",
+                  color: "white", // 🔹 texto blanco
+                }}
+                aria-label="Cerrar menú"
+              >
+                ✖
+              </button>
+            </div>
+
+            {/* Logo arriba */}
+            <div style={{ textAlign: "center", marginBottom: "1rem" }}>
+              <img
+                src="/logo-dorado-biblia.png"
+                alt="Logo pastoral"
+                style={{ width: "64px", height: "64px" }}
+              />
+            </div>
+
+            {/* Botón de modo noche */}
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                marginBottom: "1rem",
+                color: "white",
+              }}
+            >
+              <span>Modo noche</span>
+              <input
+                type="checkbox"
+                checked={darkMode}
+                onChange={(e) => setDarkMode(e.target.checked)}
+              />
+            </div>
+
+            {/* Secciones con más espacio y texto blanco */}
+            <nav>
+              <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
+                <li style={{ marginBottom: "1rem" }}>
+                  <Link href="/eventos" style={{ color: "white", textDecoration: "none" }}>
+                    📅 Eventos
+                  </Link>
+                </li>
+                <li style={{ marginBottom: "1rem" }}>
+                  <Link href="/notas" style={{ color: "white", textDecoration: "none" }}>
+                    📝 Notas
+                  </Link>
+                </li>
+                <li style={{ marginBottom: "1rem" }}>
+                  <Link href="/oraciones" style={{ color: "white", textDecoration: "none" }}>
+                    🙏 Oraciones
+                  </Link>
+                </li>
+              </ul>
+            </nav>
+          </div>
+        </>
       )}
+
+      {/* Animación CSS */}
+      {/* Animación CSS */}
+  <style jsx>{`
+     @keyframes slideIn {
+     from {
+      transform: translateX(-100%);
+       }
+       to {
+          transform: translateX(0);
+       }
+     }
+
+     .header-logo {
+       height: 64px; /* 🔹 tamaño grande por defecto */
+     }
+
+     @media (max-width: 600px) {
+        .header-logo {
+         height: 60px; /* 🔹 más pequeño en móviles */
+        }
+      }
+    `}</style>
     </>
   );
 }
