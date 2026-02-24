@@ -17,63 +17,39 @@ export default function Header({ setVista }: Props) {
 
   return (
     <>
-      <header
-        style={{
-          display: "grid",
-          gridTemplateColumns: "1fr 1fr 1fr 1fr",
-          alignItems: "center",
-          padding: "0.5rem",
-          background: "#E3F2FD",
-          borderBottom: "1px solid #ddd",
-          gap: "0.5rem",
-        }}
-      >
-       {/* Logo en el Header */}
-   <div style={{ textAlign: "left" }}>
-    <img
-    src="/logo-dorado-biblia.png"
-    alt="Logo pastoral"
-    className="header-logo"
-    />
-   </div>
-
-  
-
-        {/* Selector compacto */}
-        <div style={{ textAlign: "center" }}>
-          <SelectorVista setVista={setVista} />
+      <header className="main-header">
+        {/* Columna del logo */}
+        <div className="logo-container">
+          <img
+            src="/logo-dorado-biblia.png"
+            alt="Logo pastoral"
+            className="header-logo"
+          />
         </div>
 
-        {/* Buscador */}
-        <div style={{ textAlign: "center" }}>
-          <button
-            onClick={() => setSearchOpen(!searchOpen)}
-            style={{
-              background: "none",
-              border: "none",
-              fontSize: "1.45rem",
-              cursor: "pointer",
-            }}
-            aria-label="Abrir buscador"
-          >
-            🔍
-          </button>
-        </div>
-
-        {/* Menú hamburguesa */}
-        <div style={{ textAlign: "right" }}>
-          <button
-            onClick={() => setMenuOpen(true)}
-            style={{
-              background: "none",
-              border: "none",
-              fontSize: "1.3rem",
-              cursor: "pointer",
-            }}
-            aria-label="Abrir menú"
-          >
-            ☰
-          </button>
+        {/* Columna agrupada con selector, buscador y menú */}
+        <div className="actions-container">
+          <div className="selector-container">
+            <SelectorVista setVista={setVista} />
+          </div>
+          <div className="search-container">
+            <button
+              onClick={() => setSearchOpen(!searchOpen)}
+              className="icon-button"
+              aria-label="Abrir buscador"
+            >
+              🔍
+            </button>
+          </div>
+          <div className="menu-container">
+            <button
+              onClick={() => setMenuOpen(true)}
+              className="icon-button"
+              aria-label="Abrir menú"
+            >
+              ☰
+            </button>
+          </div>
         </div>
       </header>
 
@@ -85,77 +61,30 @@ export default function Header({ setVista }: Props) {
         />
       )}
 
-      {/* Overlay + menú lateral */}
       {menuOpen && (
         <>
-          {/* Overlay oscuro con blur */}
-          <div
-            onClick={() => setMenuOpen(false)}
-            style={{
-              position: "fixed",
-              top: 0,
-              left: 0,
-              width: "100%",
-              height: "100%",
-              backgroundColor: "rgba(0,0,0,0.7)",
-              backdropFilter: "blur(4px)",
-              zIndex: 999,
-            }}
-          />
+          <div onClick={() => setMenuOpen(false)} className="overlay" />
 
-          {/* Panel lateral */}
-          <div
-            style={{
-              position: "fixed",
-              top: 0,
-              left: 0,
-              width: "250px",
-              height: "100%",
-              backgroundColor: "#2b2835",
-              boxShadow: "2px 0 6px rgba(0,0,0,0.2)",
-              zIndex: 1000,
-              padding: "1rem",
-              display: "flex",
-              flexDirection: "column",
-              animation: "slideIn 0.3s forwards",
-              color: "white", // 🔹 todo el texto en blanco
-            }}
-          >
-            {/* Botón de cierre discreto en blanco */}
+          <div className="side-panel">
             <div style={{ textAlign: "right" }}>
               <button
                 onClick={() => setMenuOpen(false)}
-                style={{
-                  background: "none",
-                  border: "none",
-                  fontSize: "1.2rem",
-                  cursor: "pointer",
-                  color: "white", // 🔹 texto blanco
-                }}
+                className="close-button"
                 aria-label="Cerrar menú"
               >
                 ✖
               </button>
             </div>
 
-            {/* Logo arriba */}
             <div style={{ textAlign: "center", marginBottom: "1rem" }}>
-              <img
-                src="/logo-dorado-biblia.png"
-                alt="Logo pastoral"
-                style={{ width: "64px", height: "64px" }}
-              />
+             <img
+               src="/logo-dorado-biblia.png"
+               alt="Logo pastoral"
+               style={{ width: "120px", height: "120px" }} // 🔹 más grande en overlay
+             />
             </div>
 
-            {/* Botón de modo noche */}
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                marginBottom: "1rem",
-                color: "white",
-              }}
-            >
+            <div className="night-mode">
               <span>Modo noche</span>
               <input
                 type="checkbox"
@@ -164,7 +93,6 @@ export default function Header({ setVista }: Props) {
               />
             </div>
 
-            {/* Secciones con más espacio y texto blanco */}
             <nav>
               <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
                 <li style={{ marginBottom: "1rem" }}>
@@ -188,28 +116,102 @@ export default function Header({ setVista }: Props) {
         </>
       )}
 
-      {/* Animación CSS */}
-      {/* Animación CSS */}
-  <style jsx>{`
-     @keyframes slideIn {
-     from {
-      transform: translateX(-100%);
-       }
-       to {
-          transform: translateX(0);
-       }
-     }
-
-     .header-logo {
-       height: 64px; /* 🔹 tamaño grande por defecto */
-     }
-
-     @media (max-width: 600px) {
-        .header-logo {
-         height: 60px; /* 🔹 más pequeño en móviles */
+      <style jsx>{`
+        @keyframes slideIn {
+          from {
+            transform: translateX(-100%);
+          }
+          to {
+            transform: translateX(0);
+          }
         }
-      }
-    `}</style>
+
+        .main-header {
+        display: grid;
+        grid-template-columns: 1fr 3fr;
+        background-color: #110b38; /* 🔹 gris carbón */
+         border-bottom: 1px solid #333;
+         padding: 0.1rem 0.3rem;
+         align-items: center;
+         /* color: white;  🔹 asegura que el texto/íconos se vean en blanco */
+        }
+        .logo-container {
+          text-align: left;
+        }
+
+        .header-logo {
+          height: 82px; /* 🔹 más grande */
+        }
+
+        .actions-container {
+          display: grid;
+          grid-template-columns: 1fr 1fr 1fr; /* 🔹 tres columnas internas */
+          align-items: center;
+          text-align: center;
+        }
+
+        .icon-button {
+          background: none;
+          border: none;
+          font-size: 1.40rem;
+          color: white; /* 🔹 íconos en blanco para contraste */
+          cursor: pointer;
+        }
+
+        @media (min-width: 768px) {
+          .header-logo {
+            height: 72px;
+          }
+        }
+
+        @media (min-width: 1200px) {
+          .header-logo {
+            height: 64px;
+          }
+        }
+
+        .overlay {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background-color: rgba(0, 0, 0, 0.7);
+          backdrop-filter: blur(4px);
+          z-index: 999;
+        }
+
+        .side-panel {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 250px;
+          height: 100%;
+          background-color: #2b2835;
+          box-shadow: 2px 0 6px rgba(0, 0, 0, 0.2);
+          z-index: 1000;
+          padding: 1rem;
+          display: flex;
+          flex-direction: column;
+          animation: slideIn 0.3s forwards;
+          color: white;
+        }
+
+        .close-button {
+          background: none;
+          border: none;
+          font-size: 1.2rem;
+          cursor: pointer;
+          color: white;
+        }
+
+        .night-mode {
+          display: flex;
+          justify-content: space-between;
+          margin-bottom: 1rem;
+          color: white;
+        }
+      `}</style>
     </>
   );
 }
