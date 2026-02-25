@@ -45,22 +45,21 @@ export default function ListadoEventosPage() {
 
   return (
     <div className="listadoEventos">
-      {/* Título más discreto */}
       <h1 className="listadoTitulo">
         <i className="iconoCalendario"></i> Listado de Eventos
       </h1>
 
-      {/* Botón volver al calendario más pequeño y secundario */}
       <Link href="/eventos">
         <button className="btnVolver">Volver al calendario</button>
       </Link>
 
-      {/* Contenedor de tarjetas */}
       <div className="contenedorCards">
         {eventos.map((evento) => (
           <div key={evento._id} className="eventoCard">
             <h2 className="eventoTitulo">{evento.titulo || "-"}</h2>
-            <p className="eventoFecha">📅 {new Date(evento.fecha).toLocaleDateString()}</p>
+            <p className="eventoFecha">
+              📅 {new Date(evento.fecha).toLocaleDateString()}
+            </p>
             <p className="eventoDescripcion">{evento.descripcion || "-"}</p>
             <p className="eventoUbicacion">📍 {evento.ubicacion || "-"}</p>
             {Array.isArray(evento.etiquetas) && evento.etiquetas.length > 0 ? (
@@ -72,14 +71,13 @@ export default function ListadoEventosPage() {
               <p className="eventoSubtipo">Subtipo: {evento.tipo.subtipo}</p>
             )}
 
-            {/* Estado como badge */}
             <span className={`estadoBadge ${evento.estado}`}>
               Estado: {evento.estado || "-"}
             </span>
 
-            {/* Botones de acción armonizados */}
             <div className="accionesListado">
-              <Link href={`/eventos/${evento._id}`}>
+              {/* ✅ Ajuste: ahora apunta al formulario correcto */}
+              <Link href={`/eventos?edit=${evento._id}`}>
                 <button className="btnAccion btnEditar">Editar</button>
               </Link>
               <button

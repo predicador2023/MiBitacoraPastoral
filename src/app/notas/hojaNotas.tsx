@@ -1,38 +1,76 @@
 "use client";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useState, useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation"; // ✅ leer query params
 import styles from "./hojaNotas.module.css";
 import Link from "next/link";
 
 export default function HojaNotas() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const editId = searchParams.get("edit"); // ✅ leer ?edit=ID
+
   const [titulo, setTitulo] = useState("");
   const [contenido, setContenido] = useState("");
   const [autor, setAutor] = useState("");
   const [fecha, setFecha] = useState<Date>(new Date());
 
-  // ✅ Crear nota
+  // ✅ Si hay ?edit=ID, traer la nota y rellenar el formulario
+  useEffect(() => {
+    const fetchNota = async () => {
+      if (editId) {
+        const res = await fetch(`/api/notas/${editId}`);
+        if (res.ok) {
+          const nota = await res.json();
+          setTitulo(nota.titulo);
+          setContenido(nota.contenido);
+          setAutor(nota.autor || "Evangelista José Bedoya");
+          setFecha(new Date(nota.fecha));
+        }
+      }
+    };
+    fetchNota();
+  }, [editId]);
+
+  // ✅ Guardar (crear o editar según corresponda)
   const guardarNota = async () => {
-    await fetch("/api/notas", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        titulo,
-        contenido,
-        autor: autor || "Evangelista José Bedoya",
-        fecha: new Date().toISOString(),
-      }),
-    });
+    if (editId) {
+      // 🔹 EDITAR nota existente
+      await fetch(`/api/notas/${editId}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          titulo,
+          contenido,
+          autor: autor || "Evangelista José Bedoya",
+          fecha: fecha.toISOString(),
+        }),
+      });
+    } else {
+      // 🔹 CREAR nueva nota
+      await fetch("/api/notas", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          titulo,
+          contenido,
+          autor: autor || "Evangelista José Bedoya",
+          fecha: new Date().toISOString(),
+        }),
+      });
+    }
+
+    // Resetear formulario
     setTitulo("");
     setContenido("");
     setAutor("");
     setFecha(new Date());
-    // Se queda en el formulario, el usuario decide con el botón azul
   };
 
   return (
     <div className={styles.contenedor}>
-      <h2 className={styles.encabezado}>📝 Nueva Nota</h2>
+      <h2 className={styles.encabezado}>
+        {editId ? "✏️ Editar Nota" : "📝 Nueva Nota"}
+      </h2>
 
       <input
         type="text"
@@ -66,10 +104,9 @@ export default function HojaNotas() {
           onClick={guardarNota}
           className={`${styles.btn} ${styles.verde}`}
         >
-          Guardar
+          {editId ? "Guardar cambios" : "Guardar"}
         </button>
 
-        {/* ✅ Botón azul corregido */}
         <Link href="/notas/listado" className={`${styles.btn} ${styles.azul}`}>
           Ver Notas
         </Link>

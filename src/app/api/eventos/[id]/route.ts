@@ -1,63 +1,61 @@
 import { NextResponse } from "next/server";
-import dbConnect from "@/lib/dbConnect";     // tu conexión a MongoDB
-import Evento from "@/models/evento";        // tu modelo de eventos
+import dbConnect from "@/lib/dbConnect";
+import Evento from "@/models/evento";
 
-// 🔹 GET: obtener un evento por ID
+// Obtener un evento por ID
 export async function GET(
-  req: Request,
-  context: { params: { id: string } }
+  request: Request,
+  { params }: { params: { id: string } }
 ) {
   await dbConnect();
-  const { id } = context.params;   // ✅ objeto plano, sin await
   try {
+    const { id } = params; // ✅ correcto
     const evento = await Evento.findById(id);
     if (!evento) {
       return NextResponse.json({ error: "Evento no encontrado" }, { status: 404 });
     }
-    // ✅ Convertir _id a string para coherencia
-    const eventoSerializado = {
-      ...evento.toObject(),
-      _id: evento._id.toString(),
-    };
-    return NextResponse.json(eventoSerializado);
-  } catch (error) {
-    return NextResponse.json({ error: "Error al buscar evento" }, { status: 500 });
+    return NextResponse.json(evento);
+  } catch (error: any) {
+    console.error("❌ Error en GET /api/eventos/[id]:", error);
+    return NextResponse.json({ error: "Error interno del servidor" }, { status: 500 });
   }
 }
 
-// 🔹 PUT: actualizar un evento por ID
+// Actualizar un evento por ID
 export async function PUT(
-  req: Request,
-  context: { params: { id: string } }
+  request: Request,
+  { params }: { params: { id: string } }
 ) {
   await dbConnect();
-  const { id } = context.params;
   try {
-    const body = await req.json();
-    const eventoActualizado = await Evento.findByIdAndUpdate(id, body, { new: true });
-    if (!eventoActualizado) {
+    const { id } = params;
+    const body = await request.json();
+    const evento = await Evento.findByIdAndUpdate(id, body, { new: true });
+    if (!evento) {
       return NextResponse.json({ error: "Evento no encontrado" }, { status: 404 });
     }
-    return NextResponse.json(eventoActualizado);
-  } catch (error) {
-    return NextResponse.json({ error: "Error al actualizar evento" }, { status: 500 });
+    return NextResponse.json(evento);
+  } catch (error: any) {
+    console.error("❌ Error en PUT /api/eventos/[id]:", error);
+    return NextResponse.json({ error: "Error interno del servidor" }, { status: 500 });
   }
 }
 
-// 🔹 DELETE: eliminar un evento por ID
+// Eliminar un evento por ID
 export async function DELETE(
-  req: Request,
-  context: { params: { id: string } }
+  request: Request,
+  { params }: { params: { id: string } }
 ) {
   await dbConnect();
-  const { id } = context.params;
   try {
-    const eventoEliminado = await Evento.findByIdAndDelete(id);
-    if (!eventoEliminado) {
+    const { id } = params;
+    const evento = await Evento.findByIdAndDelete(id);
+    if (!evento) {
       return NextResponse.json({ error: "Evento no encontrado" }, { status: 404 });
     }
-    return NextResponse.json({ message: "Evento eliminado correctamente" });
-  } catch (error) {
-    return NextResponse.json({ error: "Error al eliminar evento" }, { status: 500 });
+    return NextResponse.json({ mensaje: "Evento eliminado correctamente" });
+  } catch (error: any) {
+    console.error("❌ Error en DELETE /api/eventos/[id]:", error);
+    return NextResponse.json({ error: "Error interno del servidor" }, { status: 500 });
   }
 }

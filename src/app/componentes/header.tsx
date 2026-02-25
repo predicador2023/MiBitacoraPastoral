@@ -18,7 +18,6 @@ export default function Header({ setVista }: Props) {
   return (
     <>
       <header className="main-header">
-        {/* Columna del logo */}
         <div className="logo-container">
           <img
             src="/logo-dorado-biblia.png"
@@ -27,7 +26,6 @@ export default function Header({ setVista }: Props) {
           />
         </div>
 
-        {/* Columna agrupada con selector, buscador y menú */}
         <div className="actions-container">
           <div className="selector-container">
             <SelectorVista setVista={setVista} />
@@ -35,7 +33,7 @@ export default function Header({ setVista }: Props) {
           <div className="search-container">
             <button
               onClick={() => setSearchOpen(!searchOpen)}
-              className="icon-button"
+              className="icon-button lupa"
               aria-label="Abrir buscador"
             >
               🔍
@@ -53,13 +51,14 @@ export default function Header({ setVista }: Props) {
         </div>
       </header>
 
-      {searchOpen && (
+      {/* Buscador con transición lenta */}
+      <div className={`searchBox ${searchOpen ? "open" : ""}`}>
         <SearchBox
           query={query}
           setQuery={setQuery}
           onClose={() => setSearchOpen(false)}
         />
-      )}
+      </div>
 
       {menuOpen && (
         <>
@@ -72,16 +71,28 @@ export default function Header({ setVista }: Props) {
                 className="close-button"
                 aria-label="Cerrar menú"
               >
-                ✖
+                {/* 🔹 Solo SVG, sin texto */}
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="#666"
+                  strokeWidth="2"
+                >
+                  <line x1="18" y1="6" x2="6" y2="18" />
+                  <line x1="6" y1="6" x2="18" y2="18" />
+                </svg>
               </button>
             </div>
 
             <div style={{ textAlign: "center", marginBottom: "1rem" }}>
-             <img
-               src="/logo-dorado-biblia.png"
-               alt="Logo pastoral"
-               style={{ width: "120px", height: "120px" }} // 🔹 más grande en overlay
-             />
+              <img
+                src="/logo-dorado-biblia.png"
+                alt="Logo pastoral"
+                style={{ width: "120px", height: "120px" }}
+              />
             </div>
 
             <div className="night-mode">
@@ -118,34 +129,30 @@ export default function Header({ setVista }: Props) {
 
       <style jsx>{`
         @keyframes slideIn {
-          from {
-            transform: translateX(-100%);
-          }
-          to {
-            transform: translateX(0);
-          }
+          from { transform: translateX(-100%); }
+          to { transform: translateX(0); }
+        }
+
+        @keyframes fadeInSlow {
+          from { opacity: 0; }
+          to { opacity: 1; }
         }
 
         .main-header {
-        display: grid;
-        grid-template-columns: 1fr 3fr;
-        background-color: #110b38; /* 🔹 gris carbón */
-         border-bottom: 1px solid #333;
-         padding: 0.1rem 0.3rem;
-         align-items: center;
-         /* color: white;  🔹 asegura que el texto/íconos se vean en blanco */
-        }
-        .logo-container {
-          text-align: left;
+          display: grid;
+          grid-template-columns: 1fr 3fr;
+          background-color: #110b38;
+          border-bottom: 1px solid #333;
+          padding: 0.1rem 0.3rem;
+          align-items: center;
         }
 
-        .header-logo {
-          height: 82px; /* 🔹 más grande */
-        }
+        .logo-container { text-align: left; }
+        .header-logo { height: 82px; }
 
         .actions-container {
           display: grid;
-          grid-template-columns: 1fr 1fr 1fr; /* 🔹 tres columnas internas */
+          grid-template-columns: 1fr 1fr 1fr;
           align-items: center;
           text-align: center;
         }
@@ -154,28 +161,34 @@ export default function Header({ setVista }: Props) {
           background: none;
           border: none;
           font-size: 1.40rem;
-          color: white; /* 🔹 íconos en blanco para contraste */
+          color: white;
           cursor: pointer;
         }
 
-        @media (min-width: 768px) {
-          .header-logo {
-            height: 72px;
-          }
+        .lupa {
+          opacity: 0;
+          animation: fadeInSlow 2s forwards;
+          transition: transform 0.5s ease;
         }
+        .lupa:hover { transform: scale(1.1); }
 
-        @media (min-width: 1200px) {
-          .header-logo {
-            height: 64px;
-          }
+        .searchBox {
+          max-height: 0;
+          opacity: 0;
+          overflow: hidden;
+          transform: translateY(-20px);
+          transition: all 1.5s ease;
+        }
+        .searchBox.open {
+          max-height: 300px;
+          opacity: 1;
+          transform: translateY(0);
         }
 
         .overlay {
           position: fixed;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
+          top: 0; left: 0;
+          width: 100%; height: 100%;
           background-color: rgba(0, 0, 0, 0.7);
           backdrop-filter: blur(4px);
           z-index: 999;
@@ -183,10 +196,8 @@ export default function Header({ setVista }: Props) {
 
         .side-panel {
           position: fixed;
-          top: 0;
-          left: 0;
-          width: 250px;
-          height: 100%;
+          top: 0; left: 0;
+          width: 250px; height: 100%;
           background-color: #2b2835;
           box-shadow: 2px 0 6px rgba(0, 0, 0, 0.2);
           z-index: 1000;
@@ -197,12 +208,20 @@ export default function Header({ setVista }: Props) {
           color: white;
         }
 
+        /* 🔹 Botón de cierre solo con SVG */
         .close-button {
           background: none;
           border: none;
-          font-size: 1.2rem;
           cursor: pointer;
-          color: white;
+        }
+        .close-button svg {
+          stroke: #666;
+          width: 14px;
+          height: 14px;
+          transition: stroke 0.3s ease;
+        }
+        .close-button:hover svg {
+          stroke: #fff;
         }
 
         .night-mode {
@@ -211,6 +230,9 @@ export default function Header({ setVista }: Props) {
           margin-bottom: 1rem;
           color: white;
         }
+
+        @media (min-width: 768px) { .header-logo { height: 72px; } }
+        @media (min-width: 1200px) { .header-logo { height: 64px; } }
       `}</style>
     </>
   );
