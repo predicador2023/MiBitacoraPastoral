@@ -5,7 +5,7 @@ export const fetchCache = "force-no-store";
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation"; // ✅ para leer query params
+import { useSearchParams } from "next/navigation";
 import "./formEvento.css";
 
 interface Evento {
@@ -37,9 +37,7 @@ export default function EventosPage() {
   const searchParams = useSearchParams();
   const editId = searchParams?.get("edit");
 
-  // 🔹 Consumir API (GET)
   const fetchEventos = async () => {
-    if (typeof window === "undefined") return; // ✅ evita ejecución en build
     try {
       const res = await fetch("/api/eventos");
       if (!res.ok) throw new Error("Error al cargar eventos");
@@ -54,7 +52,6 @@ export default function EventosPage() {
     fetchEventos();
   }, []);
 
-  // 🔹 Detectar query param y cargar evento automáticamente
   useEffect(() => {
     if (editId && eventos.length > 0) {
       const evento = eventos.find((e) => e._id === editId);
@@ -62,7 +59,6 @@ export default function EventosPage() {
     }
   }, [editId, eventos]);
 
-  // 🔹 Manejo de formulario
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -89,10 +85,7 @@ export default function EventosPage() {
       fecha: new Date(formData.fecha),
       descripcion: formData.descripcion,
       ubicacion: formData.ubicacion,
-      etiquetas: formData.etiquetas
-        .split(",")
-        .map((tag) => tag.trim())
-        .filter(Boolean),
+      etiquetas: formData.etiquetas.split(",").map((tag) => tag.trim()),
       tipo: { subtipo: formData.subtipo }
     };
 
@@ -120,7 +113,6 @@ export default function EventosPage() {
     }
   };
 
-  // 🔹 Cargar datos en el formulario para editar
   const startEdit = (evento: Evento) => {
     setEditingId(evento._id);
     setFormData({
@@ -143,7 +135,6 @@ export default function EventosPage() {
         <button className="btnVerEventos">Ver listado</button>
       </Link>
 
-      {/* Formulario */}
       <form onSubmit={handleSubmit} className="formEvento">
         <h2>{editingId ? "Editar evento" : "Crear nuevo evento"}</h2>
         <input type="text" name="titulo" placeholder="Título" value={formData.titulo} onChange={handleChange} required />
@@ -155,7 +146,6 @@ export default function EventosPage() {
         <button type="submit">{editingId ? "Guardar cambios" : "Crear Evento"}</button>
       </form>
 
-      {/* Lista de eventos */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {eventos.map((evento) => (
           <div key={evento._id} className="border rounded p-4 bg-blue-50">
