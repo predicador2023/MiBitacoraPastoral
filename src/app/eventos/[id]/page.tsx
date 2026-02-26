@@ -5,8 +5,10 @@ import { useParams, useRouter } from "next/navigation";  // ✅ importar router
 import "../formEvento.css";
 
 export default function EditarEventoPage() {
-  const { id } = useParams();
-  const router = useRouter();   // ✅ inicializar router
+  // ✅ tipado limpio: le decimos a TS que existe "id" y es string
+  const params = useParams<{ id: string }>();
+  const id = params.id;
+  const router = useRouter();
 
   const [formData, setFormData] = useState({
     titulo: "",

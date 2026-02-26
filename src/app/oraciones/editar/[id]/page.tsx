@@ -3,7 +3,9 @@ import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 
 export default function EditarOracion() {
-  const { id } = useParams();
+  // ✅ tipado limpio: le decimos a TS que existe "id" y es string
+  const params = useParams<{ id: string }>();
+  const id = params.id;
   const router = useRouter();
 
   const [titulo, setTitulo] = useState("");
@@ -15,7 +17,7 @@ export default function EditarOracion() {
   useEffect(() => {
     const fetchOracion = async () => {
       try {
-        const res = await fetch(`/api/oraciones/${String(id)}`);
+        const res = await fetch(`/api/oraciones/${id}`);
         if (!res.ok) throw new Error("No se pudo cargar la oración");
         const data = await res.json();
 
@@ -34,7 +36,7 @@ export default function EditarOracion() {
 
   const guardarCambios = async () => {
     try {
-      const res = await fetch(`/api/oraciones/${String(id)}`, {
+      const res = await fetch(`/api/oraciones/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ titulo, texto, autor }),

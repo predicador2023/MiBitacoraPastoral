@@ -4,8 +4,11 @@ import { useParams, useRouter } from "next/navigation";
 import styles from "../../hojaNotas.module.css";
 
 export default function EditarNota() {
-  const { id } = useParams();
+  // ✅ tipado limpio: le decimos a TS que existe "id" y es string
+  const params = useParams<{ id: string }>();
+  const id = params.id;
   const router = useRouter();
+
   const [nota, setNota] = useState<any>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -21,7 +24,7 @@ export default function EditarNota() {
         setError("No se pudo cargar la nota.");
       }
     };
-    fetchNota();
+    if (id) fetchNota();
   }, [id]);
 
   const actualizarNota = async (e: React.FormEvent) => {
