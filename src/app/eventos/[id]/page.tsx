@@ -1,13 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useParams, useRouter } from "next/navigation";  // ✅ importar router
+import { useParams, useRouter } from "next/navigation";
 import "../formEvento.css";
 
 export default function EditarEventoPage() {
-  // ✅ tipado limpio: le decimos a TS que existe "id" y es string
   const params = useParams<{ id: string }>();
-  const id = params.id;
+  const id = params?.id;   // ✅ optional chaining
   const router = useRouter();
 
   const [formData, setFormData] = useState({
@@ -72,7 +71,7 @@ export default function EditarEventoPage() {
 
     if (res.ok) {
       alert("Evento actualizado correctamente ✅");
-      router.push("/eventos/listado");   // ✅ redirige al listado
+      router.push("/eventos/listado");
     } else {
       alert("Error al actualizar evento ❌");
     }

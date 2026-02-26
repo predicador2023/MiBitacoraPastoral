@@ -4,9 +4,8 @@ import { useParams, useRouter } from "next/navigation";
 import styles from "../../hojaNotas.module.css";
 
 export default function EditarNota() {
-  // ✅ tipado limpio: le decimos a TS que existe "id" y es string
   const params = useParams<{ id: string }>();
-  const id = params.id;
+  const id = params?.id;   // ✅ optional chaining
   const router = useRouter();
 
   const [nota, setNota] = useState<any>(null);

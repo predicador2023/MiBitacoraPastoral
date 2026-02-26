@@ -3,9 +3,9 @@ import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 
 export default function EditarOracion() {
-  // ✅ tipado limpio: le decimos a TS que existe "id" y es string
+  // ✅ tipado limpio con optional chaining
   const params = useParams<{ id: string }>();
-  const id = params.id;
+  const id = params?.id;
   const router = useRouter();
 
   const [titulo, setTitulo] = useState("");
