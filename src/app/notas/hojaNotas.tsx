@@ -7,7 +7,7 @@ import Link from "next/link";
 export default function HojaNotas() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const editId = searchParams.get("edit"); // ✅ leer ?edit=ID
+  const editId = searchParams?.get("edit"); // ✅ optional chaining
 
   const [titulo, setTitulo] = useState("");
   const [contenido, setContenido] = useState("");

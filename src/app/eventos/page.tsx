@@ -32,7 +32,7 @@ export default function EventosPage() {
   const [editingId, setEditingId] = useState<string | null>(null);
 
   const searchParams = useSearchParams();
-  const editId = searchParams.get("edit"); // ✅ leer ?edit=ID
+  const editId = searchParams?.get("edit"); // ✅ optional chaining
 
   // 🔹 Consumir API (GET)
   const fetchEventos = async () => {
