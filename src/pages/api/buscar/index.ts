@@ -1,15 +1,21 @@
-import { NextResponse } from "next/server";
+import type { NextApiRequest, NextApiResponse } from "next";
 import dbConnect from "@/lib/dbConnect";
 import Nota from "@/models/nota";
 import Evento from "@/models/evento";
 import Oracion from "@/models/oracion";
 
-export async function GET(request: Request) {
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
+  if (req.method !== "GET") {
+    return res.status(405).json({ error: "Método no permitido" });
+  }
+
   try {
     await dbConnect();
 
-    const { searchParams } = new URL(request.url);
-    const query = searchParams.get("q") || "";
+    const query = (req.query.q as string) || "";
 
     // Buscar coincidencias en notas
     const notas = await Nota.find({
@@ -39,23 +45,23 @@ export async function GET(request: Request) {
       ...notas.map((n) => ({
         label: n.titulo,
         snippet: n.contenido,
-        path: `/notas?edit=${n._id}`, // ✅ apunta al formulario de notas
+        path: `/notas?edit=${n._id}`,
       })),
       ...eventos.map((e) => ({
         label: e.titulo,
         snippet: e.descripcion,
-        path: `/eventos?edit=${e._id}`, // ✅ apunta al formulario de eventos
+        path: `/eventos?edit=${e._id}`,
       })),
       ...oraciones.map((o) => ({
         label: o.titulo,
         snippet: o.texto,
-        path: `/oraciones?edit=${o._id}`, // ✅ apunta al formulario de oraciones
+        path: `/oraciones?edit=${o._id}`,
       })),
     ];
 
-    return NextResponse.json(resultados);
+    return res.status(200).json(resultados);
   } catch (error: any) {
     console.error("❌ Error en GET /api/buscar:", error);
-    return NextResponse.json({ error: "Error interno del servidor" }, { status: 500 });
+    return res.status(500).json({ error: "Error interno del servidor" });
   }
 }
