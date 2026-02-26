@@ -1,6 +1,6 @@
 "use client";
+export const fetchCache = "force-no-store";
 
-export const dynamic = "force-dynamic";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation"; // ✅ para leer query params
