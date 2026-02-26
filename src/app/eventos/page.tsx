@@ -1,4 +1,5 @@
 "use client";
+
 export const dynamic = "force-dynamic";
 export const fetchCache = "force-no-store";
 
@@ -34,17 +35,21 @@ export default function EventosPage() {
   const [editingId, setEditingId] = useState<string | null>(null);
 
   const searchParams = useSearchParams();
-  const editId = searchParams?.get("edit"); // ✅ optional chaining
+  const editId = searchParams?.get("edit");
 
   // 🔹 Consumir API (GET)
   const fetchEventos = async () => {
-  if (typeof window === "undefined") return; // ✅ evita ejecución en build
-  const res = await fetch("/api/eventos");
-  if (res.ok) {
-    const data = await res.json();
-    setEventos(data);
-  }
+    if (typeof window === "undefined") return; // ✅ evita ejecución en build
+    try {
+      const res = await fetch("/api/eventos");
+      if (!res.ok) throw new Error("Error al cargar eventos");
+      const data = await res.json();
+      setEventos(data);
+    } catch (err) {
+      console.error("Error cargando eventos:", err);
+    }
   };
+
   useEffect(() => {
     fetchEventos();
   }, []);
@@ -53,9 +58,7 @@ export default function EventosPage() {
   useEffect(() => {
     if (editId && eventos.length > 0) {
       const evento = eventos.find((e) => e._id === editId);
-      if (evento) {
-        startEdit(evento);
-      }
+      if (evento) startEdit(evento);
     }
   }, [editId, eventos]);
 
@@ -66,6 +69,18 @@ export default function EventosPage() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  const resetForm = () => {
+    setFormData({
+      titulo: "",
+      fecha: "",
+      descripcion: "",
+      ubicacion: "",
+      etiquetas: "",
+      subtipo: ""
+    });
+    setEditingId(null);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -74,51 +89,34 @@ export default function EventosPage() {
       fecha: new Date(formData.fecha),
       descripcion: formData.descripcion,
       ubicacion: formData.ubicacion,
-      etiquetas: formData.etiquetas.split(",").map((tag) => tag.trim()),
+      etiquetas: formData.etiquetas
+        .split(",")
+        .map((tag) => tag.trim())
+        .filter(Boolean),
       tipo: { subtipo: formData.subtipo }
     };
 
-    if (editingId) {
-      // 🔹 PUT (editar)
-      const res = await fetch(`/api/eventos/${editingId}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload)
-      });
-      if (res.ok) {
-        setEditingId(null);
-        setFormData({
-          titulo: "",
-          fecha: "",
-          descripcion: "",
-          ubicacion: "",
-          etiquetas: "",
-          subtipo: ""
+    try {
+      if (editingId) {
+        const res = await fetch(`/api/eventos/${editingId}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
         });
-        fetchEventos();
+        if (!res.ok) throw new Error("Error al editar evento");
       } else {
-        alert("Error al editar evento");
-      }
-    } else {
-      // 🔹 POST (crear)
-      const res = await fetch("/api/eventos", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload)
-      });
-      if (res.ok) {
-        setFormData({
-          titulo: "",
-          fecha: "",
-          descripcion: "",
-          ubicacion: "",
-          etiquetas: "",
-          subtipo: ""
+        const res = await fetch("/api/eventos", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
         });
-        fetchEventos();
-      } else {
-        alert("Error al crear evento");
+        if (!res.ok) throw new Error("Error al crear evento");
       }
+      resetForm();
+      fetchEventos();
+    } catch (err) {
+      console.error("Error guardando evento:", err);
+      alert("Ocurrió un error al guardar");
     }
   };
 
@@ -148,92 +146,31 @@ export default function EventosPage() {
       {/* Formulario */}
       <form onSubmit={handleSubmit} className="formEvento">
         <h2>{editingId ? "Editar evento" : "Crear nuevo evento"}</h2>
-        <input
-          type="text"
-          name="titulo"
-          placeholder="Título"
-          value={formData.titulo}
-          onChange={handleChange}
-          required
-        />
-        <input
-          type="date"
-          name="fecha"
-          value={formData.fecha}
-          onChange={handleChange}
-          required
-        />
-        <textarea
-          name="descripcion"
-          placeholder="Descripción"
-          value={formData.descripcion}
-          onChange={handleChange}
-        />
-        <input
-          type="text"
-          name="ubicacion"
-          placeholder="Ubicación"
-          value={formData.ubicacion}
-          onChange={handleChange}
-        />
-        <input
-          type="text"
-          name="etiquetas"
-          placeholder="Etiquetas (coma separada)"
-          value={formData.etiquetas}
-          onChange={handleChange}
-        />
-        <input
-          type="text"
-          name="subtipo"
-          placeholder="Subtipo (ej. Santa Cena)"
-          value={formData.subtipo}
-          onChange={handleChange}
-        />
-        <button type="submit">
-          {editingId ? "Guardar cambios" : "Crear Evento"}
-        </button>
+        <input type="text" name="titulo" placeholder="Título" value={formData.titulo} onChange={handleChange} required />
+        <input type="date" name="fecha" value={formData.fecha} onChange={handleChange} required />
+        <textarea name="descripcion" placeholder="Descripción" value={formData.descripcion} onChange={handleChange} />
+        <input type="text" name="ubicacion" placeholder="Ubicación" value={formData.ubicacion} onChange={handleChange} />
+        <input type="text" name="etiquetas" placeholder="Etiquetas (coma separada)" value={formData.etiquetas} onChange={handleChange} />
+        <input type="text" name="subtipo" placeholder="Subtipo (ej. Santa Cena)" value={formData.subtipo} onChange={handleChange} />
+        <button type="submit">{editingId ? "Guardar cambios" : "Crear Evento"}</button>
       </form>
 
       {/* Lista de eventos */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {eventos.map((evento) => (
           <div key={evento._id} className="border rounded p-4 bg-blue-50">
-            <h2 className="text-lg font-semibold text-blue-700">
-              {evento.titulo || "-"}
-            </h2>
-            <p className="text-sm text-gray-600">
-              {new Date(evento.fecha).toLocaleDateString()}
-            </p>
+            <h2 className="text-lg font-semibold text-blue-700">{evento.titulo || "-"}</h2>
+            <p className="text-sm text-gray-600">{new Date(evento.fecha).toLocaleDateString()}</p>
             <p>{evento.descripcion || "-"}</p>
-            <p>
-              <strong>Ubicación:</strong> {evento.ubicacion || "-"}
-            </p>
+            <p><strong>Ubicación:</strong> {evento.ubicacion || "-"}</p>
             {Array.isArray(evento.etiquetas) && evento.etiquetas.length > 0 ? (
-              <p>
-                <strong>Etiquetas:</strong> {evento.etiquetas.join(", ")}
-              </p>
+              <p><strong>Etiquetas:</strong> {evento.etiquetas.join(", ")}</p>
             ) : (
-              <p>
-                <strong>Etiquetas:</strong> -
-              </p>
+              <p><strong>Etiquetas:</strong> -</p>
             )}
-            {evento.tipo?.subtipo && (
-              <p>
-                <strong>Subtipo:</strong> {evento.tipo.subtipo}
-              </p>
-            )}
-            <p className="text-xs text-gray-500">
-              Estado: {evento.estado || "-"}
-            </p>
-
-            {/* Botón editar directo */}
-            <button
-              onClick={() => startEdit(evento)}
-              className="btnEditar"
-            >
-              Editar
-            </button>
+            {evento.tipo?.subtipo && <p><strong>Subtipo:</strong> {evento.tipo.subtipo}</p>}
+            <p className="text-xs text-gray-500">Estado: {evento.estado || "-"}</p>
+            <button onClick={() => startEdit(evento)} className="btnEditar">Editar</button>
           </div>
         ))}
       </div>
