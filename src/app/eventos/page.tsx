@@ -38,13 +38,13 @@ export default function EventosPage() {
 
   // 🔹 Consumir API (GET)
   const fetchEventos = async () => {
-    const res = await fetch("/api/eventos");
-    if (res.ok) {
-      const data = await res.json();
-      setEventos(data);
-    }
+  if (typeof window === "undefined") return; // ✅ evita ejecución en build
+  const res = await fetch("/api/eventos");
+  if (res.ok) {
+    const data = await res.json();
+    setEventos(data);
+  }
   };
-
   useEffect(() => {
     fetchEventos();
   }, []);
