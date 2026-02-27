@@ -27,7 +27,7 @@ export default function OracionesPage() {
   const refrescarOraciones = async () => {
     try {
       setLoading(true);
-      const res = await fetch("/api/oraciones");
+      const res = await fetch("/api/oraciones", { cache: "no-store" }); // 👈 fuerza SSR
       const data = await res.json();
 
       if (Array.isArray(data)) {

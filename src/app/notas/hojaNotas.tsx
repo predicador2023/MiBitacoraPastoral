@@ -1,13 +1,13 @@
 "use client";
 import { useState, useEffect } from "react";
-import { useRouter, useSearchParams } from "next/navigation"; // ✅ leer query params
+import { useRouter, useSearchParams } from "next/navigation"; 
 import styles from "./hojaNotas.module.css";
 import Link from "next/link";
 
 export default function HojaNotas() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const editId = searchParams?.get("edit"); // ✅ optional chaining
+  const editId = searchParams?.get("edit");
 
   const [titulo, setTitulo] = useState("");
   const [contenido, setContenido] = useState("");
@@ -18,7 +18,7 @@ export default function HojaNotas() {
   useEffect(() => {
     const fetchNota = async () => {
       if (editId) {
-        const res = await fetch(`/api/notas/${editId}`);
+        const res = await fetch(`/api/notas/${editId}`, { cache: "no-store" }); // 👈 fuerza SSR
         if (res.ok) {
           const nota = await res.json();
           setTitulo(nota.titulo);

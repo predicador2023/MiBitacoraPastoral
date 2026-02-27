@@ -39,7 +39,7 @@ export default function EventosPage() {
 
   const fetchEventos = async () => {
     try {
-      const res = await fetch("/api/eventos");
+      const res = await fetch("/api/eventos", { cache: "no-store" }); // 👈 fuerza SSR
       if (!res.ok) throw new Error("Error al cargar eventos");
       const data = await res.json();
       setEventos(data);
