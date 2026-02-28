@@ -6,6 +6,7 @@ import { useState } from "react";
 type Result = {
   label: string;
   path: string;
+  snippet?: string; // 🔹 ahora también mostramos el contenido
 };
 
 type Props = {
@@ -23,10 +24,12 @@ export default function SearchBox({ query, setQuery, onClose }: Props) {
     const value = e.target.value;
     setQuery(value);
 
-    if (value.length > 1) {
+    // 🚨 Control: solo buscar si hay 3+ caracteres
+    if (value.trim().length >= 3) {
       setLoading(true);
       try {
-        const res = await fetch(`/api/buscar?query=${encodeURIComponent(value)}`);
+        // 🔹 Usar "q" porque el backend espera ese parámetro
+        const res = await fetch(`/api/buscar?q=${encodeURIComponent(value)}`);
         const data: Result[] = await res.json();
         setSuggestions(data);
       } catch (err) {
@@ -47,6 +50,14 @@ export default function SearchBox({ query, setQuery, onClose }: Props) {
     }
   };
 
+  // 🔹 Función para resaltar coincidencias en snippet
+  const highlightMatch = (text: string, query: string) => {
+    const regex = new RegExp(`(${query})`, "gi");
+    return text.split(regex).map((part, i) =>
+      regex.test(part) ? <mark key={i}>{part}</mark> : part
+    );
+  };
+
   return (
     <div className="search-box">
       <input
@@ -59,11 +70,18 @@ export default function SearchBox({ query, setQuery, onClose }: Props) {
 
       {loading && <p className="loading">Buscando...</p>}
 
+      {query.length > 0 && query.length < 3 && (
+        <p className="hint">Escribe al menos 3 caracteres para buscar</p>
+      )}
+
       {suggestions.length > 0 && (
         <ul className="suggestions">
           {suggestions.map((s, i) => (
             <li key={i} onClick={() => router.push(s.path)}>
-              {s.label}
+              <strong>{s.label}</strong>
+              {s.snippet && (
+                <p className="snippet">{highlightMatch(s.snippet, query)}</p>
+              )}
             </li>
           ))}
         </ul>
@@ -102,6 +120,11 @@ export default function SearchBox({ query, setQuery, onClose }: Props) {
           color: #666;
         }
 
+        .hint {
+          font-size: 0.85rem;
+          color: #999;
+        }
+
         .suggestions {
           list-style: none;
           margin: 0;
@@ -118,6 +141,17 @@ export default function SearchBox({ query, setQuery, onClose }: Props) {
 
         .suggestions li:hover {
           background: #eee;
+        }
+
+        .snippet {
+          margin: 0;
+          font-size: 0.85rem;
+          color: #666;
+        }
+
+        mark {
+          background: yellow;
+          font-weight: bold;
         }
 
         .close-button {

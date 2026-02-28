@@ -17,7 +17,11 @@ export default async function handler(
 
     const query = (req.query.q as string) || "";
 
-    // Buscar coincidencias en notas
+    // 🚨 Solo cortar si está vacío
+    if (!query.trim()) {
+      return res.status(200).json([]);
+    }
+
     const notas = await Nota.find({
       $or: [
         { titulo: { $regex: query, $options: "i" } },
@@ -25,7 +29,6 @@ export default async function handler(
       ],
     }).lean();
 
-    // Buscar coincidencias en eventos
     const eventos = await Evento.find({
       $or: [
         { titulo: { $regex: query, $options: "i" } },
@@ -33,7 +36,6 @@ export default async function handler(
       ],
     }).lean();
 
-    // Buscar coincidencias en oraciones
     const oraciones = await Oracion.find({
       $or: [
         { titulo: { $regex: query, $options: "i" } },
