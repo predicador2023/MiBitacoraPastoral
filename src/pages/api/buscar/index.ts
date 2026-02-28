@@ -57,7 +57,8 @@ export default async function handler(
       ...oraciones.map((o) => ({
         label: o.titulo,
         snippet: o.texto,
-        path: `/oraciones?edit=${o._id}`,
+        // 🔹 Ajuste: ahora apunta a la ruta dinámica editar/[id]
+        path: `/oraciones/editar/${o._id}`,
       })),
     ];
 

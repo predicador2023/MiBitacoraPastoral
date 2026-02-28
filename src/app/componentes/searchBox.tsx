@@ -6,7 +6,7 @@ import { useState } from "react";
 type Result = {
   label: string;
   path: string;
-  snippet?: string; // 🔹 ahora también mostramos el contenido
+  snippet?: string;
 };
 
 type Props = {
@@ -24,11 +24,9 @@ export default function SearchBox({ query, setQuery, onClose }: Props) {
     const value = e.target.value;
     setQuery(value);
 
-    // 🚨 Control: solo buscar si hay 3+ caracteres
     if (value.trim().length >= 3) {
       setLoading(true);
       try {
-        // 🔹 Usar "q" porque el backend espera ese parámetro
         const res = await fetch(`/api/buscar?q=${encodeURIComponent(value)}`);
         const data: Result[] = await res.json();
         setSuggestions(data);
@@ -45,16 +43,35 @@ export default function SearchBox({ query, setQuery, onClose }: Props) {
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter" && suggestions.length > 0) {
-      // 🔹 lleva directo al primer resultado
       router.push(suggestions[0].path);
     }
   };
 
-  // 🔹 Función para resaltar coincidencias en snippet
-  const highlightMatch = (text: string, query: string) => {
-    const regex = new RegExp(`(${query})`, "gi");
-    return text.split(regex).map((part, i) =>
-      regex.test(part) ? <mark key={i}>{part}</mark> : part
+  // 🔹 Función para recortar y resaltar coincidencias parciales
+  const getSnippetFragment = (text: string, query: string) => {
+    if (!query) return text;
+
+    const regex = new RegExp(query, "gi");
+    const match = regex.exec(text);
+
+    if (!match) return text;
+
+    const index = match.index;
+    const start = Math.max(0, index - 20);
+    const end = Math.min(text.length, index + match[0].length + 20);
+
+    const fragment = text.substring(start, end);
+
+    // Resaltar todas las coincidencias dentro del fragmento
+    return fragment.split(regex).map((part, i, arr) =>
+      i < arr.length - 1 ? (
+        <>
+          {part}
+          <mark key={i}>{match[0]}</mark>
+        </>
+      ) : (
+        part
+      )
     );
   };
 
@@ -80,7 +97,7 @@ export default function SearchBox({ query, setQuery, onClose }: Props) {
             <li key={i} onClick={() => router.push(s.path)}>
               <strong>{s.label}</strong>
               {s.snippet && (
-                <p className="snippet">{highlightMatch(s.snippet, query)}</p>
+                <p className="snippet">{getSnippetFragment(s.snippet, query)}</p>
               )}
             </li>
           ))}
