@@ -58,7 +58,12 @@ export default function ListadoEventosPage() {
           <div key={evento._id} className="eventoCard">
             <h2 className="eventoTitulo">{evento.titulo || "-"}</h2>
             <p className="eventoFecha">
-              📅 {new Date(evento.fecha).toLocaleDateString()}
+              📅{" "}
+              {new Date(evento.fecha).toLocaleDateString("es-AR", {
+                day: "2-digit",
+                month: "2-digit",
+                year: "numeric"
+              })}
             </p>
             <p className="eventoDescripcion">{evento.descripcion || "-"}</p>
             <p className="eventoUbicacion">📍 {evento.ubicacion || "-"}</p>

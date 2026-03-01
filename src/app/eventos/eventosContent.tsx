@@ -51,12 +51,42 @@ export default function EventosContent() {
     setEditingId(null);
   };
 
+  // 🔹 Nuevo: cargar datos del evento al editar
+  useEffect(() => {
+    const cargarEvento = async () => {
+      if (editId) {
+        try {
+          const res = await fetch(`/api/eventos/${editId}`);
+          if (res.ok) {
+            const evento = await res.json();
+            setFormData({
+              titulo: evento.titulo || "",
+              fecha: evento.fecha ? evento.fecha.split("T")[0] : "",
+              descripcion: evento.descripcion || "",
+              ubicacion: evento.ubicacion || "",
+              etiquetas: evento.etiquetas ? evento.etiquetas.join(", ") : "",
+              subtipo: evento.tipo?.subtipo || ""
+            });
+            setEditingId(evento._id);
+          }
+        } catch (err) {
+          console.error("Error cargando evento:", err);
+        }
+      }
+    };
+
+    cargarEvento();
+  }, [editId]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    // 🔹 Normalizamos la fecha para que no se corra un día por la zona horaria
+    const fechaNormalizada = new Date(formData.fecha + "T12:00:00");
+
     const payload = {
       titulo: formData.titulo,
-      fecha: new Date(formData.fecha),
+      fecha: fechaNormalizada,
       descripcion: formData.descripcion,
       ubicacion: formData.ubicacion,
       etiquetas: formData.etiquetas.split(",").map((tag) => tag.trim()),

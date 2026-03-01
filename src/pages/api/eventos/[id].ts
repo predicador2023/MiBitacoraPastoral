@@ -1,12 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import dbConnect from "@/lib/dbConnect";
-import Evento from "@/models/evento";
+import Evento from "../../../../models/evento";
 import mongoose from "mongoose";
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   await dbConnect();
   const { id } = req.query;
 
@@ -19,11 +16,18 @@ export default async function handler(
 
     if (req.method === "PUT") {
       const body = req.body;
+
+      // 🔹 convertir fecha explícitamente
+      if (body.fecha) {
+        body.fecha = new Date(body.fecha);
+      }
+
       const eventoActualizado = await Evento.findByIdAndUpdate(
         new mongoose.Types.ObjectId(id as string),
-        body,
+        { $set: body }, // 🔹 usamos $set para asegurar actualización
         { new: true }
       );
+
       if (!eventoActualizado) return res.status(404).json({ mensaje: "Evento no encontrado" });
       return res.json(eventoActualizado);
     }
