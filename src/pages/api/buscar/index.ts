@@ -1,8 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import dbConnect from "@/lib/dbConnect";
-import Nota from "@/models/nota";
-import Evento from "@/models/evento";
-import Oracion from "@/models/oracion";
+import Oracion from "../../../../models/oracion";
+import Evento from "../../../../models/evento";
+import Nota from "../../../../models/nota";
 
 export default async function handler(
   req: NextApiRequest,
