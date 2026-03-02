@@ -65,7 +65,7 @@
 .textoNota {
   color: #333 !important;
   font-size: 0.68rem;
-  display: -webkit-box; /* clamp aplicado sólo al texto */
+  display: -webkit-box;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
@@ -76,7 +76,7 @@
   color: #333 !important;
   font-size: 0.55rem;
   margin-left: 4px;
-  display: inline; /* ícono en la misma línea */
+  display: inline;
 }
 
 /* 🔹 Oraciones en verde */
@@ -269,4 +269,68 @@
   .header {
     gap: 0.3rem;
   }
+}
+
+/* 🔹 Variantes para modo noche */
+:global(body.dark-mode) .titulo {
+  color: #eee;
+}
+
+:global(body.dark-mode) .diaSemana {
+  background-color: #333;
+  border: 1px solid #555;
+  color: #eee;
+}
+
+:global(body.dark-mode) .celdaDia {
+  background: #222;
+  border: 1px solid #555;
+  color: #eee;
+}
+
+:global(body.dark-mode) .numeroDia {
+  color: #bbb;
+}
+
+:global(body.dark-mode) .notaDia {
+  background: #827717;
+  color: #fff;
+}
+
+:global(body.dark-mode) .textoNota,
+:global(body.dark-mode) .iconoNota {
+  color: #fff !important;
+}
+
+:global(body.dark-mode) .oracionDia {
+  background-color: #1b5e20;
+  color: #a5d6a7;
+}
+
+:global(body.dark-mode) .textoOracion,
+:global(body.dark-mode) .iconoOracion {
+  color: #a5d6a7 !important;
+}
+
+:global(body.dark-mode) .eventoDia {
+  background-color: #0d47a1;
+  color: #bbdefb;
+}
+
+:global(body.dark-mode) .textoEvento,
+:global(body.dark-mode) .iconoEvento {
+  color: #bbdefb !important;
+}
+
+:global(body.dark-mode) .tarjeta {
+  background: #222;
+  border: 1px solid #555;
+}
+
+:global(body.dark-mode) .tarjeta h3 {
+  color: #a5d6a7;
+}
+
+:global(body.dark-mode) .tarjeta p {
+  color: #eee;
 }

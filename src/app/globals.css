@@ -35,6 +35,25 @@ a {
   text-decoration: none;
 }
 
+  body.dark-mode {
+  background-color: #111;
+  color: #eee;
+}
+
+body.dark-mode .main-header {
+  background-color: #222;
+  border-bottom: 1px solid #555;
+}
+
+body.dark-mode .side-panel {
+  background-color: #1a1a1a;
+  color: #eee;
+}
+
+body.dark-mode a {
+  color: #ddd;
+}
+
 @media (prefers-color-scheme: dark) {
   html {
     color-scheme: dark;

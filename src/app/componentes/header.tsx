@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import SelectorVista from "./selectorVista";
 import SearchBox from "./searchBox";
@@ -14,6 +14,26 @@ export default function Header({ setVista }: Props) {
   const [searchOpen, setSearchOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [darkMode, setDarkMode] = useState(false);
+
+  // 🔹 Al montar, lee la preferencia guardada
+  useEffect(() => {
+    const savedMode = localStorage.getItem("darkMode");
+    if (savedMode === "true") {
+      setDarkMode(true);
+      document.body.classList.add("dark-mode");
+    }
+  }, []);
+
+  // 🔹 Cada vez que cambia darkMode, aplica la clase y guarda en localStorage
+  useEffect(() => {
+    if (darkMode) {
+      document.body.classList.add("dark-mode");
+      localStorage.setItem("darkMode", "true");
+    } else {
+      document.body.classList.remove("dark-mode");
+      localStorage.setItem("darkMode", "false");
+    }
+  }, [darkMode]);
 
   return (
     <>
@@ -107,17 +127,26 @@ export default function Header({ setVista }: Props) {
             <nav>
               <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
                 <li style={{ marginBottom: "1rem" }}>
-                  <Link href="/eventos" style={{ color: "white", textDecoration: "none" }}>
+                  <Link
+                    href="/eventos"
+                    style={{ color: "white", textDecoration: "none" }}
+                  >
                     📅 Eventos
                   </Link>
                 </li>
                 <li style={{ marginBottom: "1rem" }}>
-                  <Link href="/notas" style={{ color: "white", textDecoration: "none" }}>
+                  <Link
+                    href="/notas"
+                    style={{ color: "white", textDecoration: "none" }}
+                  >
                     📝 Notas
                   </Link>
                 </li>
                 <li style={{ marginBottom: "1rem" }}>
-                  <Link href="/oraciones" style={{ color: "white", textDecoration: "none" }}>
+                  <Link
+                    href="/oraciones"
+                    style={{ color: "white", textDecoration: "none" }}
+                  >
                     🙏 Oraciones
                   </Link>
                 </li>
@@ -129,13 +158,21 @@ export default function Header({ setVista }: Props) {
 
       <style jsx>{`
         @keyframes slideIn {
-          from { transform: translateX(-100%); }
-          to { transform: translateX(0); }
+          from {
+            transform: translateX(-100%);
+          }
+          to {
+            transform: translateX(0);
+          }
         }
 
         @keyframes fadeInSlow {
-          from { opacity: 0; }
-          to { opacity: 1; }
+          from {
+            opacity: 0;
+          }
+          to {
+            opacity: 1;
+          }
         }
 
         .main-header {
@@ -147,8 +184,12 @@ export default function Header({ setVista }: Props) {
           align-items: center;
         }
 
-        .logo-container { text-align: left; }
-        .header-logo { height: 82px; }
+        .logo-container {
+          text-align: left;
+        }
+        .header-logo {
+          height: 82px;
+        }
 
         .actions-container {
           display: grid;
@@ -170,7 +211,9 @@ export default function Header({ setVista }: Props) {
           animation: fadeInSlow 2s forwards;
           transition: transform 0.5s ease;
         }
-        .lupa:hover { transform: scale(1.1); }
+        .lupa:hover {
+          transform: scale(1.1);
+        }
 
         .searchBox {
           max-height: 0;
@@ -208,7 +251,6 @@ export default function Header({ setVista }: Props) {
           color: white;
         }
 
-        /* 🔹 Botón de cierre solo con SVG */
         .close-button {
           background: none;
           border: none;
@@ -229,6 +271,26 @@ export default function Header({ setVista }: Props) {
           justify-content: space-between;
           margin-bottom: 1rem;
           color: white;
+        }
+
+        /* 🔹 Estilos modo noche aplicados al body */
+        body.dark-mode {
+          background-color: #111;
+          color: #eee;
+        }
+
+        body.dark-mode .main-header {
+          background-color: #222;
+          border-bottom: 1px solid #555;
+        }
+
+        body.dark-mode .side-panel {
+          background-color: #1a1a1a;
+          color: #eee;
+        }
+
+        body.dark-mode a {
+          color: #ddd;
         }
 
         @media (min-width: 768px) { .header-logo { height: 72px; } }
