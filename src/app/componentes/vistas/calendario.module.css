@@ -67,6 +67,7 @@
   font-size: 0.68rem;
   display: -webkit-box;
   -webkit-line-clamp: 3;
+  line-clamp: 3; /* propiedad estándar */
   -webkit-box-orient: vertical;
   overflow: hidden;
   word-break: break-word;
@@ -96,6 +97,7 @@
   font-size: 0.68rem;
   display: -webkit-box;
   -webkit-line-clamp: 3;
+  line-clamp: 3; /* propiedad estándar */
   -webkit-box-orient: vertical;
   overflow: hidden;
   word-break: break-word;
@@ -125,6 +127,7 @@
   font-size: 0.68rem;
   display: -webkit-box;
   -webkit-line-clamp: 3;
+  line-clamp: 3; /* propiedad estándar */
   -webkit-box-orient: vertical;
   overflow: hidden;
   word-break: break-word;
@@ -173,6 +176,55 @@
   font-size: 1.5rem;
   cursor: pointer;
 }
+:global(body.dark-mode) .celdaDia {
+  background: #1e1e1e;
+  border: 1px solid #444;
+  color: #eee;
+}
+
+:global(body.dark-mode) .diaSemana {
+  background-color: #2c2c2c;
+  border: 1px solid #444;
+  color: #ddd;
+}
+
+:global(body.dark-mode) .numeroDia {
+  color: #aaa;
+}
+
+:global(body.dark-mode) .notaDia {
+  background: #fbc02d;
+  color: #fff;
+}
+
+:global(body.dark-mode) .oracionDia {
+  background-color: #2e7d32;
+  color: #a5d6a7;
+}
+
+:global(body.dark-mode) .eventoDia {
+  background-color: #1565c0;
+  color: #bbdefb;
+}
+
+:global(body.dark-mode) .tarjeta {
+  background: #1e1e1e;
+  border: 1px solid #444;
+}
+
+:global(body.dark-mode) .tarjeta h3 {
+  color: #a5d6a7;
+}
+
+:global(body.dark-mode) .tarjeta p {
+  color: #eee;
+}
+:global(body.dark-mode) .navBtn {
+  color: #fff; /* flechas blancas en modo noche */
+}
+:global(body.dark-mode) .navBtn:hover {
+  color: #ddd; /* un gris claro al pasar el mouse */
+}
 
 /* 📱 Ajustes para pantallas pequeñas */
 @media (max-width: 600px) {
@@ -197,6 +249,7 @@
   .textoOracion, .textoEvento, .textoNota {
     font-size: 0.62rem;
     -webkit-line-clamp: 3;
+    line-clamp: 3; /* propiedad estándar */
     line-height: 0.9;
   }
 
@@ -245,6 +298,7 @@
   .textoOracion, .textoEvento, .textoNota {
     font-size: 0.55rem;
     -webkit-line-clamp: 3;
+    line-clamp: 3; /* propiedad estándar */
     line-height: 0.9;
   }
 
