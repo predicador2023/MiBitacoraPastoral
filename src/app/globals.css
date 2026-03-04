@@ -35,9 +35,17 @@ a {
   text-decoration: none;
 }
 
-  body.dark-mode {
+/* 🌙 Modo noche general */
+body.dark-mode {
   background-color: #111;
   color: #eee;
+
+  /* 👇 Logo dorado vertical fijo en el fondo */
+  background-image: url("/logo-vertical-dorado.png");
+  background-repeat: no-repeat;
+  background-position: center bottom;
+  background-attachment: fixed;
+  background-size: 300px;
 }
 
 body.dark-mode .main-header {
@@ -52,6 +60,71 @@ body.dark-mode .side-panel {
 
 body.dark-mode a {
   color: #ddd;
+}
+
+/* 🌙 Vista vertical */
+body.dark-mode .diaBloque {
+  background: rgba(42, 42, 42, 0.6);
+  border-color: #444;
+  color: #fff;
+}
+
+body.dark-mode .detalle,
+body.dark-mode .descripcion,
+body.dark-mode .ubicacion,
+body.dark-mode .etiquetas {
+  color: #fff;
+}
+
+/* Colores base (modo claro) */
+.notaDia {
+  background: #fff176;
+  color: #333;
+}
+
+.oracionDia {
+  background-color: #e8f5e9;
+  color: #43A047;
+}
+
+.eventoDia {
+  background-color: #e3f2fd;
+  color: #0d47a1;
+}
+
+/* Colores adaptados en modo noche con transparencia */
+body.dark-mode .notaDia {
+  background: rgba(74, 74, 42, 0.6);
+  color: #fff;
+}
+
+body.dark-mode .oracionDia {
+  background-color: rgba(42, 74, 42, 0.6);
+  color: #fff;
+}
+
+body.dark-mode .eventoDia {
+  background-color: rgba(42, 58, 74, 0.6);
+  color: #fff;
+}
+
+/* 🌙 Vista calendario */
+body.dark-mode .calendario-celda {
+  background-color: rgba(42, 42, 42, 0.6); /* semi-transparente */
+  border: 1px solid #444;
+  color: #fff;
+}
+
+body.dark-mode .calendario-celda:hover {
+  background-color: rgba(66, 66, 66, 0.7); /* al pasar el cursor */
+}
+
+body.dark-mode .calendario-evento {
+  background-color: rgba(255, 215, 0, 0.3); /* dorado suave para eventos */
+  color: #fff;
+  border-radius: 4px;
+  padding: 2px 4px;
+  font-size: 0.75rem;
 }
 
 @media (prefers-color-scheme: dark) {

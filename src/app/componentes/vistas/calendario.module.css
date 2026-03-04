@@ -177,15 +177,14 @@
   cursor: pointer;
 }
 :global(body.dark-mode) .celdaDia {
-  background: #1e1e1e;
-  border: 1px solid #444;
+  background: rgba(42, 42, 42, 0.6); /* semi-transparente */
+  border: 1px solid #555;
   color: #eee;
 }
-
 :global(body.dark-mode) .diaSemana {
-  background-color: #2c2c2c;
-  border: 1px solid #444;
-  color: #ddd;
+  background-color: rgba(44, 44, 44, 0.6); /* semi-transparente */
+  border: 1px solid #555;
+  color: #eee;
 }
 
 :global(body.dark-mode) .numeroDia {
@@ -193,23 +192,23 @@
 }
 
 :global(body.dark-mode) .notaDia {
-  background: #fbc02d;
+  background: rgba(74, 74, 42, 0.6);
   color: #fff;
 }
 
 :global(body.dark-mode) .oracionDia {
-  background-color: #2e7d32;
+  background-color: rgba(42, 74, 42, 0.6);
   color: #a5d6a7;
 }
 
 :global(body.dark-mode) .eventoDia {
-  background-color: #1565c0;
+  background-color: rgba(42, 58, 74, 0.6);
   color: #bbdefb;
 }
 
 :global(body.dark-mode) .tarjeta {
-  background: #1e1e1e;
-  border: 1px solid #444;
+  background: rgba(34, 34, 34, 0.9); /* casi transparente */
+  border: 1px solid #555;
 }
 
 :global(body.dark-mode) .tarjeta h3 {
@@ -238,9 +237,14 @@
     line-height: 1;
   }
 
-  .celdaDia {
-    min-height: 55px;
-  }
+ .celdaDia {
+  min-height: 55px;
+  background: transparent; /* ✅ transparente en modo claro */
+  border: 1px solid #ccc;
+  position: relative;
+  text-align: center;
+  box-sizing: border-box;
+}
 
   .numeroDia {
     font-size: 8px;
@@ -287,9 +291,6 @@
     line-height: 1;
   }
 
-  .celdaDia {
-    min-height: 50px;
-  }
 
   .numeroDia {
     font-size: 7px;
@@ -336,8 +337,8 @@
   color: #eee;
 }
 
-:global(body.dark-mode) .celdaDia {
-  background: #222;
+  :global(body.dark-mode) .celdaDia {
+  background-color: rgba(42, 42, 42, 0.6); /* ✅ semi-transparente */
   border: 1px solid #555;
   color: #eee;
 }

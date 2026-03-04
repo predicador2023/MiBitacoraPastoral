@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-import styles from "./vertical.module.css";
+import styles from "./vertical.module.css"; // solo estructura, sin colores
 
 interface Actividad {
   _id: string;
@@ -75,14 +75,14 @@ export default function VistaVertical() {
           minute: "2-digit",
         });
 
-        // Asignar clase según tipo
+        // Asignar clase global según tipo
         let tipoClase = "";
-        if (act.tipo === "evento") tipoClase = styles.eventoDia;
-        else if (act.tipo === "oracion") tipoClase = styles.oracionDia;
-        else if (act.tipo === "nota") tipoClase = styles.notaDia;
+        if (act.tipo === "evento") tipoClase = "eventoDia";
+        else if (act.tipo === "oracion") tipoClase = "oracionDia";
+        else if (act.tipo === "nota") tipoClase = "notaDia";
 
         return (
-          <div key={act._id} className={`${styles.diaBloque} ${tipoClase}`}>
+          <div key={act._id} className={`diaBloque ${tipoClase}`}>
             <div className={styles.diaTitulo}>{act.titulo}</div>
             <div className={styles.detalle}>
               {fechaStr} – {horaStr}
