@@ -93,9 +93,9 @@ export default function VistaVertical() {
             {act.ubicacion && (
               <div className={styles.ubicacion}>📍 {act.ubicacion}</div>
             )}
-            {act.etiquetas?.length > 0 && (
+            {(act.etiquetas ?? []).length > 0 && (
               <div className={styles.etiquetas}>
-                {act.etiquetas.join(", ")}
+                {(act.etiquetas ?? []).join(", ")}
               </div>
             )}
           </div>
