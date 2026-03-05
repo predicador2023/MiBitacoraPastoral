@@ -99,24 +99,26 @@ export default function Header({ setVista }: Props) {
 
           <div className="side-panel">
             <div style={{ textAlign: "right" }}>
-              <button
-                onClick={() => setMenuOpen(false)}
-                className="close-button"
-                aria-label="Cerrar menú"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="14"
-                  height="14"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="#666"
-                  strokeWidth="2"
-                >
-                  <line x1="18" y1="6" x2="6" y2="18" />
-                  <line x1="6" y1="6" x2="18" y2="18" />
-                </svg>
-              </button>
+             <button
+      onClick={() => setMenuOpen(false)}
+      className="close-button"
+      aria-label="Cerrar menú"
+    >
+       <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="22"
+          height="22"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+         strokeLinecap="round"
+         strokeLinejoin="round"
+      >
+         <line x1="18" y1="6" x2="6" y2="18" />
+         <line x1="6" y1="6" x2="18" y2="18" />
+        </svg>
+      </button> 
             </div>
 
             <div style={{ textAlign: "center", marginBottom: "1rem" }}>
@@ -263,20 +265,23 @@ export default function Header({ setVista }: Props) {
           color: white;
         }
 
-        .close-button {
-          background: none;
-          border: none;
-          cursor: pointer;
-        }
-        .close-button svg {
-          stroke: #666;
-          width: 14px;
-          height: 14px;
-          transition: stroke 0.3s ease;
-        }
-        .close-button:hover svg {
-          stroke: #fff;
-        }
+            .close-button {
+           background: none;
+           border: none;
+            cursor: pointer;
+             padding: 6px;
+          }
+
+      .close-button svg {
+       width: 22px;
+       height: 22px;
+      color: white; /* siempre blanco */
+       transition: transform 0.2s ease;
+      }
+
+    .close-button:hover svg {
+     transform: scale(1.1);
+      }
 
         .night-mode {
           display: flex;
