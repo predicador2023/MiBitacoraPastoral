@@ -91,7 +91,6 @@ export default function Header({ setVista }: Props) {
                 className="close-button"
                 aria-label="Cerrar menú"
               >
-                {/* 🔹 Solo SVG, sin texto */}
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="14"
@@ -291,6 +290,26 @@ export default function Header({ setVista }: Props) {
 
         body.dark-mode a {
           color: #ddd;
+        }
+
+        /* 🔹 Ajustes para el selector Vista en modo noche */
+        body.dark-mode .selector-container select {
+          background-color: #2a2a2a;
+          color: #eee;
+          border: 1px solid #555;
+          border-radius: 4px;
+          padding: 4px;
+        }
+
+        body.dark-mode .selector-container option {
+          background-color: #2a2a2a;
+          color: #eee;
+        }
+
+        body.dark-mode .selector-container select:hover,
+        body.dark-mode .selector-container select:focus {
+          background-color: #444;
+          color: #fff;
         }
 
         @media (min-width: 768px) { .header-logo { height: 72px; } }
